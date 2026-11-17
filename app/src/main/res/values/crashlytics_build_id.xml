@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The Crashlytics Gradle plugin normally generates this build ID, but it is incompatible
+         with AGP 9.0 and therefore skipped (see app/build.gradle). Crashlytics refuses to start
+         without a non-empty build ID, so we provide a stable one by hand. Crashes still report;
+         they just share one build ID until a compatible plugin ships. -->
+    <string name="com.crashlytics.android.build_id" translatable="false">0123456789abcdef0123456789abcdef01234567</string>
+</resources>

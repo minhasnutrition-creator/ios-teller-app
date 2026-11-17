@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#090e17">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Teller%20DeX%20Pro%22%2C%22short_name%22%3A%22Teller%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23090e17%22%2C%22theme_color%22%3A%22%23090e17%22%7D">
+    <title>Teller DeX Desktop</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+    <!-- ── APP SIDEBAR (software-style navigation) ────────────────── -->
+    <aside id="app-sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-logo">T</div>
+            <div class="sidebar-name">Teller</div>
+        </div>
+        <nav id="sidebar-nav"></nav>
+        <div class="sidebar-footer">
+            <div class="sync-indicator"><div class="pulse-circle"></div><span>LIVE SYNC</span></div>
+            <select id="companySelector" class="dex-input" onchange="onCompanyChange(this.value)"></select>
+        </div>
+    </aside>
+
+    <!-- ── DESKTOP WORKSPACE ──────────────────────────────────────── -->
+    <div id="desktop-workspace">
+        <div id="snap-preview"></div>
+
+        <!-- Desktop Shortcuts (DeX Style) -->
+        <div class="desktop-icons-grid">
+            <div class="desktop-icon" onclick="openWindow('win-dashboard')" title="Dashboard">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #10b981, #059669);"><svg viewBox="0 0 24 24" fill="white"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+                <div class="desktop-icon-label">Dashboard</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-daybook')" title="Daybook">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"><svg viewBox="0 0 24 24" fill="white"><path d="M3 5h18v2H3zm0 6h18v2H3zm0 6h18v2H3z"/></svg></div>
+                <div class="desktop-icon-label">Daybook</div>
+            </div>
+            <div class="desktop-icon" onclick="openNewVoucherWindow('Sales')" title="New Voucher">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><svg viewBox="0 0 24 24" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg></div>
+                <div class="desktop-icon-label">New Voucher</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-ledgers')" title="Ledgers">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);"><svg viewBox="0 0 24 24" fill="white"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+                <div class="desktop-icon-label">Ledgers</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-stock')" title="Stock Items">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #06b6d4, #0891b2);"><svg viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.7V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.71c.57-.36 1-.98 1-1.7V4c0-1.1-1-2-2-2zm-5 14H9v-2h6v2zm5-6H4V4h16v6z"/></svg></div>
+                <div class="desktop-icon-label">Stock Items</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-trial-balance')" title="Trial Balance">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #ec4899, #be185d);"><svg viewBox="0 0 24 24" fill="white"><path d="M13 7.83c.85-.3 1.53-.98 1.83-1.83H18l-3 7c0 1.66 1.57 3 3.5 3s3.5-1.34 3.5-3l-3-7h2V4h-6.17c-.41-1.17-1.52-2-2.83-2s-2.42.83-2.83 2H3v2h2l-3 7c0 1.66 1.57 3 3.5 3S9 14.66 9 13L6 6h3.17c.3.85.98 1.53 1.83 1.83V19H7v2h10v-2h-4V7.83z"/></svg></div>
+                <div class="desktop-icon-label">Trial Balance</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-register')" title="Registers">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #0ea5e9, #0369a1);"><svg viewBox="0 0 24 24" fill="white"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/></svg></div>
+                <div class="desktop-icon-label">Registers</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-outstanding')" title="Outstanding">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #f43f5e, #be123c);"><svg viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg></div>
+                <div class="desktop-icon-label">Outstanding</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-profit-loss')" title="Profit &amp; Loss">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #10b981, #047857);"><svg viewBox="0 0 24 24" fill="white"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div>
+                <div class="desktop-icon-label">Profit &amp; Loss</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-balance-sheet')" title="Balance Sheet">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);"><svg viewBox="0 0 24 24" fill="white"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg></div>
+                <div class="desktop-icon-label">Balance Sheet</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-ledger-statement')" title="Ledger Statement">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #f59e0b, #b45309);"><svg viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+                <div class="desktop-icon-label">Ledger Stmt</div>
+            </div>
+            <div class="desktop-icon" onclick="openWindow('win-gst-report')" title="GST Report">
+                <div class="desktop-icon-badge" style="background: linear-gradient(135deg, #14b8a6, #0f766e);"><svg viewBox="0 0 24 24" fill="white"><path d="M19.5 3.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2v14H3v3c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3V2l-1.5 1.5zM18 19H6v-3h12v3z"/></svg></div>
+                <div class="desktop-icon-label">GST Report</div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: DASHBOARD ──────────────────────────────────── -->
+        <div class="dex-window active" id="win-dashboard" style="top: 30px; left: 140px; width: 880px; height: 580px;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>📊</span>
+                    <span>Executive Financial Dashboard</span>
+                    <span class="badge" id="dashCompanyBadge"></span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-dashboard')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-dashboard')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-dashboard')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="dex-kpi-grid">
+                    <div class="kpi-card green">
+                        <div class="kpi-label">Today's Sales</div>
+                        <div class="kpi-value" id="kpiSales">₹0.00</div>
+                    </div>
+                    <div class="kpi-card amber">
+                        <div class="kpi-label">Today's Purchases</div>
+                        <div class="kpi-value" id="kpiPurchases">₹0.00</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Cash-In-Hand</div>
+                        <div class="kpi-value" id="kpiCash">₹0.00</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Bank Balance</div>
+                        <div class="kpi-value" id="kpiBank">₹0.00</div>
+                    </div>
+                </div>
+
+                <div class="window-toolbar" style="margin-top: 6px;">
+                    <div style="font-weight: 700; font-size: 13px; color: #fff;">Recent Live Transactions</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="loadDashboard()">↻ Refresh</button>
+                        <button class="dex-btn dex-btn-primary" onclick="openNewVoucherWindow('Sales')">+ New Invoice (F8)</button>
+                    </div>
+                </div>
+
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="recentTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Voucher #</th>
+                                <th>Particulars / Ledger</th>
+                                <th class="tar">Amount (₹)</th>
+                                <th class="tar">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTableBody">
+                            <tr><td colspan="6" style="text-align: center; color: var(--dex-text-dim); padding: 30px;">Loading live transactions...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: DAYBOOK ────────────────────────────────────── -->
+        <div class="dex-window" id="win-daybook" style="top: 50px; left: 180px; width: 940px; height: 590px; display: none;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>📑</span>
+                    <span>Daybook & Transaction Register</span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-daybook')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-daybook')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-daybook')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="date" id="daybookDatePicker" class="dex-input" onchange="loadDaybook()" style="padding: 5px 8px; font-size: 12px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="setDaybookToday()">Today</button>
+                        <button class="dex-btn dex-btn-subtle" onclick="loadDaybookAll()">Show All</button>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <div class="search-input-wrap">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" placeholder="Filter vouchers or parties..." oninput="filterDaybook(this.value)">
+                        </div>
+                        <button class="dex-btn dex-btn-subtle" onclick="exportDaybookCsv()">📥 Export CSV</button>
+                    </div>
+                </div>
+
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="daybookTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Voucher #</th>
+                                <th>Particulars</th>
+                                <th>Narration</th>
+                                <th class="tar">Debit (₹)</th>
+                                <th class="tar">Credit (₹)</th>
+                                <th class="tar">Print</th>
+                            </tr>
+                        </thead>
+                        <tbody id="daybookTableBody">
+                            <tr><td colspan="8" style="text-align: center; color: var(--dex-text-dim); padding: 30px;">Loading daybook...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: QUICK BILL (simple billing, no accounting words) ────── -->
+        <div class="dex-window" id="win-quickbill" style="top: 40px; left: 220px; width: 980px; height: 640px; display: none;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>🛒</span>
+                    <span>Quick Bill</span>
+                    <span class="badge" id="qbNextNo"></span>
+                    <span class="badge">F2 = new bill</span>
+                    <span class="badge">Ctrl+S = save &amp; print</span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-quickbill')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-quickbill')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-quickbill')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="qb-grid">
+                    <div class="qb-left">
+                        <div class="qb-search-wrap">
+                            <input type="text" id="qbSearch" class="dex-input qb-search" placeholder="Scan barcode or type item name, then press Enter" autocomplete="off" oninput="qbSearchInput()" onkeydown="qbSearchKey(event)">
+                            <div id="qbSuggest" class="qb-suggest"></div>
+                        </div>
+                        <div class="pc-table-wrap qb-table-wrap">
+                            <table class="pc-table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th style="width: 90px;">Qty</th>
+                                        <th style="width: 120px;">Price</th>
+                                        <th class="tar" style="width: 120px;">Amount</th>
+                                        <th style="width: 40px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qbBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="qb-hint">Prices include GST. Scan the same item again to add one more.</div>
+                    </div>
+                    <div class="qb-right">
+                        <div class="form-group">
+                            <label>Customer name (optional)</label>
+                            <input type="text" id="qbCustomer" class="dex-input" list="qbCustomerList" placeholder="e.g. Rahul" autocomplete="off">
+                            <datalist id="qbCustomerList"></datalist>
+                        </div>
+                        <div class="form-group">
+                            <label>How is the customer paying?</label>
+                            <div class="qb-pay">
+                                <button id="qbPayCash" class="qb-pay-btn" onclick="qbSetPayment('cash')">💵 Cash</button>
+                                <button id="qbPayUpi" class="qb-pay-btn" onclick="qbSetPayment('upi')">📱 UPI / Card</button>
+                                <button id="qbPayCredit" class="qb-pay-btn" onclick="qbSetPayment('credit')">🕒 Pay later</button>
+                            </div>
+                            <div id="qbPayHint" class="qb-hint"></div>
+                        </div>
+                        <div class="qb-total"><span>Total</span><b id="qbTotal">₹0.00</b></div>
+                        <div id="qbMsg" class="qb-msg"></div>
+                        <button id="qbSavePrint" class="dex-btn dex-btn-primary qb-save" onclick="qbSave(true)">🖨️ Save &amp; Print</button>
+                        <button id="qbSaveOnly" class="dex-btn dex-btn-subtle qb-wide" onclick="qbSave(false)">Save without printing</button>
+                        <button class="dex-btn dex-btn-subtle qb-wide" onclick="qbReset()">Clear bill</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: VOUCHER ENTRY (FAST KEYBOARD) ──────────────── -->
+        <div class="dex-window" id="win-voucher" style="top: 40px; left: 220px; width: 900px; height: 620px; display: none;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>⚡</span>
+                    <span id="voucherWinTitle">Voucher Entry (Sales)</span>
+                    <span class="badge">Ctrl+S to Save</span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-voucher')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-voucher')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-voucher')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <!-- Type Selector Chips -->
+                <div style="display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;">
+                    <button class="fn-chip" onclick="setVoucherType('Sales')">[F8] Sales</button>
+                    <button class="fn-chip" onclick="setVoucherType('Purchase')">[F9] Purchase</button>
+                    <button class="fn-chip" onclick="setVoucherType('Receipt')">[F6] Receipt</button>
+                    <button class="fn-chip" onclick="setVoucherType('Payment')">[F5] Payment</button>
+                    <button class="fn-chip" onclick="setVoucherType('Contra')">[F4] Contra</button>
+                    <button class="fn-chip" onclick="setVoucherType('Journal')">[F7] Journal</button>
+                </div>
+
+                <div class="dex-form-grid">
+                    <div class="form-group">
+                        <label>Voucher Number</label>
+                        <input type="text" id="vNum" class="dex-input mono" placeholder="Auto / e.g. INV-101">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="vDate" class="dex-input">
+                    </div>
+                    <div class="form-group">
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <label id="lblDebit">Debit Ledger (Party / Cash / Bank)</label>
+                            <button class="dex-btn dex-btn-subtle" onclick="openLedgerForm()" style="padding:2px 8px; font-size:12px;" title="Create new ledger">+ New</button>
+                        </div>
+                        <select id="vDebit" class="dex-input"></select>
+                    </div>
+                    <div class="form-group">
+                        <div style="display:flex; align-items:center; justify-content:space-between;">
+                            <label id="lblCredit">Credit Ledger (Sales / Revenue)</label>
+                            <button class="dex-btn dex-btn-subtle" onclick="openLedgerForm()" style="padding:2px 8px; font-size:12px;" title="Create new ledger">+ New</button>
+                        </div>
+                        <select id="vCredit" class="dex-input"></select>
+                    </div>
+                </div>
+
+                <!-- Items Section -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0 8px;">
+                    <div style="font-weight: 700; font-size: 12px; color: var(--dex-text-muted); text-transform: uppercase;">Stock Items (Optional)</div>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="openStockForm()" style="padding: 4px 10px; font-size: 11.5px;">+ New Item</button>
+                        <button class="dex-btn dex-btn-subtle" onclick="addItemRow()" style="padding: 4px 10px; font-size: 11.5px;">+ Add Line Item</button>
+                    </div>
+                </div>
+
+                <div class="pc-table-wrap" style="max-height: 180px; margin-bottom: 14px;">
+                    <table class="pc-table" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th>Item Description</th>
+                                <th style="width: 100px;">Qty</th>
+                                <th style="width: 120px;">Rate (₹)</th>
+                                <th style="width: 90px;">GST %</th>
+                                <th class="tar" style="width: 130px;">Amount (₹)</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="dex-form-grid" style="grid-template-columns: 2fr 1fr; align-items: flex-end;">
+                    <div class="form-group">
+                        <label>Narration / Notes</label>
+                        <input type="text" id="vNarr" class="dex-input" placeholder="Terms, transaction details, remarks...">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Amount (₹)</label>
+                        <input type="number" id="vAmount" class="dex-input mono" step="0.01" style="font-size: 18px; font-weight: 800; color: var(--primary);">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px;">
+                    <button class="dex-btn dex-btn-subtle" onclick="closeWindow('win-voucher')">Cancel (Esc)</button>
+                    <button class="dex-btn dex-btn-primary" id="btnPostVoucher" onclick="saveVoucher()">Save & Post to Phone (Ctrl+S)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: LEDGERS ────────────────────────────────────── -->
+        <div class="dex-window" id="win-ledgers" style="top: 60px; left: 240px; width: 900px; height: 560px; display: none;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>👥</span>
+                    <span>Ledgers & Account Books</span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-ledgers')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-ledgers')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-ledgers')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div class="search-input-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search ledger names, groups, GSTIN..." oninput="filterLedgers(this.value)">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="loadLedgers()">↻ Reload</button>
+                        <button class="dex-btn dex-btn-subtle" onclick="exportLedgersCsv()">📥 Export CSV</button>
+                        <button class="dex-btn dex-btn-primary" onclick="openLedgerForm()">+ New Ledger</button>
+                    </div>
+                </div>
+
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="ledgersTable">
+                        <thead>
+                            <tr>
+                                <th>Ledger Name</th>
+                                <th>Account Group</th>
+                                <th>GSTIN</th>
+                                <th>Phone</th>
+                                <th class="tar">Closing Balance (₹)</th>
+                                <th class="tar">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledgersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: STOCK ITEMS ────────────────────────────────── -->
+        <div class="dex-window" id="win-stock" style="top: 70px; left: 260px; width: 880px; height: 540px; display: none;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>📦</span>
+                    <span>Stock & Inventory Items</span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-stock')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-stock')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-stock')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div class="search-input-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search stock items, HSN..." oninput="filterStock(this.value)">
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="loadStockItems()">↻ Reload</button>
+                        <button class="dex-btn dex-btn-primary" onclick="openStockForm()">+ New Item</button>
+                    </div>
+                </div>
+
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="stockTable">
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Unit</th>
+                                <th>HSN Code</th>
+                                <th class="tar">GST %</th>
+                                <th class="tar">Standard Rate (₹)</th>
+                                <th class="tar">Opening Stock</th>
+                                <th class="tar">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: TRIAL BALANCE ──────────────────────────────── -->
+        <div class="dex-window" id="win-trial-balance" style="top: 80px; left: 280px; width: 840px; height: 560px; display: none;">
+            <div class="window-header">
+                <div class="window-title">
+                    <span>⚖️</span>
+                    <span>Trial Balance Statement</span>
+                </div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-trial-balance')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-trial-balance')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-trial-balance')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="font-size: 13px; color: var(--dex-text-muted);">Reconciled Live from Phone Room Database</div>
+                    <button class="dex-btn dex-btn-subtle" onclick="loadTrialBalance()">↻ Recompute</button>
+                </div>
+
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="tbTable">
+                        <thead>
+                            <tr>
+                                <th>Particulars / Ledger</th>
+                                <th>Group</th>
+                                <th class="tar">Debit (₹)</th>
+                                <th class="tar">Credit (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbTableBody"></tbody>
+                        <tfoot>
+                            <tr style="background: rgba(255,255,255,0.06); font-weight: 800; font-family: var(--font-mono);">
+                                <td colspan="2">TOTAL</td>
+                                <td class="tar" id="tbTotalDebit">₹0.00</td>
+                                <td class="tar" id="tbTotalCredit">₹0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: REGISTERS & BOOKS ─────────────────────────────── -->
+        <div class="dex-window" id="win-register" style="top: 60px; left: 220px; width: 960px; height: 600px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>📒</span><span>Registers & Books</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-register')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-register')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-register')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select id="registerType" class="dex-input" style="padding: 6px 10px;" onchange="loadRegister()">
+                            <option>Sales</option><option>Purchase</option><option>Journal</option>
+                            <option>Receipt</option><option>Payment</option><option>Contra</option>
+                        </select>
+                        <input type="date" id="registerFrom" class="dex-input" style="padding:6px 8px; font-size:12px;" onchange="loadRegister()">
+                        <input type="date" id="registerTo" class="dex-input" style="padding:6px 8px; font-size:12px;" onchange="loadRegister()">
+                        <button class="dex-btn dex-btn-subtle" onclick="loadRegister()">↻ Refresh</button>
+                    </div>
+                    <button class="dex-btn dex-btn-subtle" onclick="exportRegisterCsv()">📥 Export CSV</button>
+                </div>
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="registerTable">
+                        <thead><tr><th>Date</th><th>Voucher #</th><th>Particulars</th><th>Narration</th><th class="tar">Debit (₹)</th><th class="tar">Credit (₹)</th><th class="tar">Action</th></tr></thead>
+                        <tbody id="registerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: LEDGER STATEMENT ───────────────────────────── -->
+        <div class="dex-window" id="win-ledger-statement" style="top: 70px; left: 240px; width: 940px; height: 620px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>📄</span><span>Ledger Statement of Accounts</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-ledger-statement')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-ledger-statement')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-ledger-statement')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <select id="ledgerStmtLedger" class="dex-input" style="padding: 6px 10px; min-width: 240px;" onchange="loadLedgerStatement()"></select>
+                    </div>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <span style="font-size: 11px; color: var(--dex-text-muted);">Opening: <b id="ledgerStmtOpening">₹0</b></span>
+                        <span style="font-size: 11px; color: var(--dex-text-muted);">Closing: <b id="ledgerStmtClosing">₹0</b></span>
+                    </div>
+                </div>
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="ledgerStmtTable">
+                        <thead><tr><th>Date</th><th>Voucher #</th><th>Type</th><th class="tar">Debit (₹)</th><th class="tar">Credit (₹)</th><th class="tar">Balance (₹)</th></tr></thead>
+                        <tbody id="ledgerStmtTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: OUTSTANDING ─────────────────────────────────── -->
+        <div class="dex-window" id="win-outstanding" style="top: 60px; left: 220px; width: 960px; height: 620px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>⏳</span><span>Outstanding Receivables & Payables</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-outstanding')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-outstanding')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-outstanding')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="font-size: 13px; color: #fff; font-weight: 700;">Receivables <span style="color: var(--dex-text-muted); font-weight: 400;">(customers owe you)</span></div>
+                    <button class="dex-btn dex-btn-subtle" onclick="loadOutstanding()">↻ Refresh</button>
+                </div>
+                <div class="pc-table-wrap" style="max-height: 38%; margin-bottom: 14px;">
+                    <table class="pc-table" id="receivablesTable">
+                        <thead><tr><th>Date</th><th>Bill #</th><th>Party</th><th class="tar">Original</th><th class="tar">Pending</th><th class="tar">Interest</th></tr></thead>
+                        <tbody id="receivablesTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="window-toolbar" style="margin-top: 6px;">
+                    <div style="font-size: 13px; color: #fff; font-weight: 700;">Payables <span style="color: var(--dex-text-muted); font-weight: 400;">(you owe suppliers)</span></div>
+                </div>
+                <div class="pc-table-wrap" style="max-height: 38%;">
+                    <table class="pc-table" id="payablesTable">
+                        <thead><tr><th>Date</th><th>Bill #</th><th>Party</th><th class="tar">Original</th><th class="tar">Pending</th><th class="tar">Interest</th></tr></thead>
+                        <tbody id="payablesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: STOCK SUMMARY ───────────────────────────────── -->
+        <div class="dex-window" id="win-stock-summary" style="top: 70px; left: 240px; width: 900px; height: 560px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>📦</span><span>Stock Summary</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-stock-summary')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-stock-summary')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-stock-summary')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="font-size: 13px; color: var(--dex-text-muted);">Live stock position from phone inventory</div>
+                    <button class="dex-btn dex-btn-subtle" onclick="loadStockSummary()">↻ Refresh</button>
+                </div>
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="stockSummaryTable">
+                        <thead><tr><th>Item</th><th>Unit</th><th class="tar">Opening</th><th class="tar">Inward</th><th class="tar">Outward</th><th class="tar">Closing</th></tr></thead>
+                        <tbody id="stockSummaryTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: PROFIT & LOSS ───────────────────────────────── -->
+        <div class="dex-window" id="win-profit-loss" style="top: 60px; left: 220px; width: 900px; height: 620px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>📈</span><span>Profit & Loss Statement</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-profit-loss')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-profit-loss')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-profit-loss')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <input type="date" id="pnlFrom" class="dex-input" style="padding:6px 8px; font-size:12px;">
+                        <span style="color:var(--dex-text-muted);">to</span>
+                        <input type="date" id="pnlTo" class="dex-input" style="padding:6px 8px; font-size:12px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="loadProfitLoss()">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="dex-kpi-grid">
+                    <div class="kpi-card green"><div class="kpi-label">Total Income</div><div class="kpi-value" id="pnlIncome">₹0</div></div>
+                    <div class="kpi-card amber"><div class="kpi-label">Total Expense</div><div class="kpi-value" id="pnlExpense">₹0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Net Profit</div><div class="kpi-value" id="pnlNet">₹0</div></div>
+                </div>
+                <div class="window-toolbar" style="margin-top: 6px;">
+                    <div style="font-size: 13px; color: #fff; font-weight: 700;">Income by Group</div>
+                    <button class="dex-btn dex-btn-subtle" onclick="loadProfitLoss()">↻ Refresh</button>
+                </div>
+                <div class="pc-table-wrap" style="max-height: 34%; margin-bottom: 14px;">
+                    <table class="pc-table" id="pnlIncomeTable">
+                        <thead><tr><th>Group</th><th class="tar">Amount (₹)</th></tr></thead>
+                        <tbody id="pnlIncomeTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="window-toolbar"><div style="font-size: 13px; color: #fff; font-weight: 700;">Expense by Group</div></div>
+                <div class="pc-table-wrap" style="max-height: 34%;">
+                    <table class="pc-table" id="pnlExpenseTable">
+                        <thead><tr><th>Group</th><th class="tar">Amount (₹)</th></tr></thead>
+                        <tbody id="pnlExpenseTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: BALANCE SHEET ───────────────────────────────── -->
+        <div class="dex-window" id="win-balance-sheet" style="top: 70px; left: 240px; width: 900px; height: 620px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>🏛️</span><span>Balance Sheet</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-balance-sheet')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-balance-sheet')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-balance-sheet')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="window-toolbar">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span style="color:var(--dex-text-muted);">As of:</span>
+                        <input type="date" id="bsTo" class="dex-input" style="padding:6px 8px; font-size:12px;">
+                        <button class="dex-btn dex-btn-subtle" onclick="loadBalanceSheet()">↻ Refresh</button>
+                    </div>
+                </div>
+                <div class="dex-kpi-grid">
+                    <div class="kpi-card green"><div class="kpi-label">Total Assets</div><div class="kpi-value" id="bsAssets">₹0</div></div>
+                    <div class="kpi-card amber"><div class="kpi-label">Total Liabilities</div><div class="kpi-value" id="bsLiabilities">₹0</div></div>
+                </div>
+                <div class="window-toolbar" style="margin-top: 6px;">
+                    <div style="font-size: 13px; color: #fff; font-weight: 700;">Assets</div>
+                    <button class="dex-btn dex-btn-subtle" onclick="loadBalanceSheet()">↻ Refresh</button>
+                </div>
+                <div class="pc-table-wrap" style="max-height: 36%; margin-bottom: 14px;">
+                    <table class="pc-table" id="bsAssetsTable">
+                        <thead><tr><th>Group</th><th class="tar">Amount (₹)</th></tr></thead>
+                        <tbody id="bsAssetsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="window-toolbar"><div style="font-size: 13px; color: #fff; font-weight: 700;">Liabilities</div></div>
+                <div class="pc-table-wrap" style="max-height: 36%;">
+                    <table class="pc-table" id="bsLiabilitiesTable">
+                        <thead><tr><th>Group</th><th class="tar">Amount (₹)</th></tr></thead>
+                        <tbody id="bsLiabilitiesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: LEDGER FORM ────────────────────────────────── -->
+        <div class="dex-window" id="win-ledger-form" style="top: 90px; left: 280px; width: 660px; height: 540px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>👤</span><span id="ledgerFormTitle">New Ledger</span></div>
+                <div class="window-controls"><button class="win-btn close" onclick="closeWindow('win-ledger-form')">✕</button></div>
+            </div>
+            <div class="window-body">
+                <input type="hidden" id="ledgerFormId">
+                <div class="dex-form-grid">
+                    <div class="form-group"><label>Ledger Name *</label><input type="text" id="ledgerName" class="dex-input"></div>
+                    <div class="form-group"><label>Account Group</label><input type="text" id="ledgerGroup" class="dex-input" list="ledgerGroups" placeholder="e.g. Sundry Debtors"><datalist id="ledgerGroups">
+                        <option>Sundry Debtors</option><option>Sundry Creditors</option><option>Cash-in-hand</option><option>Bank Accounts</option><option>Sales Accounts</option><option>Purchase Accounts</option><option>Direct Expenses</option><option>Indirect Expenses</option><option>Direct Incomes</option><option>Indirect Incomes</option><option>Duties &amp; Taxes</option><option>Fixed Assets</option><option>Current Assets</option><option>Current Liabilities</option><option>Loans (Liability)</option><option>Capital Account</option>
+                    </datalist></div>
+                    <div class="form-group"><label>Opening Balance (₹)</label><input type="number" id="ledgerOpening" class="dex-input" step="0.01" value="0"></div>
+                    <div class="form-group"><label>Phone</label><input type="text" id="ledgerPhone" class="dex-input"></div>
+                    <div class="form-group"><label>GSTIN</label><input type="text" id="ledgerGstin" class="dex-input"></div>
+                    <div class="form-group"><label>Alias / Nickname</label><input type="text" id="ledgerAlias" class="dex-input"></div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                    <button class="dex-btn dex-btn-subtle" onclick="closeWindow('win-ledger-form')">Cancel</button>
+                    <button class="dex-btn dex-btn-primary" onclick="saveLedger()">Save Ledger</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: STOCK ITEM FORM ─────────────────────────────── -->
+        <div class="dex-window" id="win-stock-form" style="top: 90px; left: 280px; width: 660px; height: 520px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>📦</span><span id="stockFormTitle">New Stock Item</span></div>
+                <div class="window-controls"><button class="win-btn close" onclick="closeWindow('win-stock-form')">✕</button></div>
+            </div>
+            <div class="window-body">
+                <input type="hidden" id="stockFormId">
+                <div class="dex-form-grid">
+                    <div class="form-group"><label>Item Name *</label><input type="text" id="stockName" class="dex-input" placeholder="e.g. Banana" onblur="detectTaxForItem()"></div>
+                    <div class="form-group"><label>Unit</label>
+                        <div style="display:flex; gap:6px;">
+                            <select id="stockUnit" class="dex-input" style="flex:1;"></select>
+                            <button class="dex-btn dex-btn-subtle" onclick="openUnitForm()" style="padding:4px 10px;" title="New unit">+</button>
+                        </div>
+                    </div>
+                    <div class="form-group"><label>HSN Code</label><input type="text" id="stockHsn" class="dex-input"></div>
+                    <div class="form-group"><label>GST %</label><input type="number" id="stockGst" class="dex-input" step="0.01" value="0"></div>
+                    <div class="form-group"><label>Standard Rate (₹)</label><input type="number" id="stockRate" class="dex-input" step="0.01" value="0"></div>
+                    <div class="form-group"><label>Opening Stock (Qty)</label><input type="number" id="stockOpening" class="dex-input" step="0.01" value="0"></div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                    <button class="dex-btn dex-btn-subtle" onclick="closeWindow('win-stock-form')">Cancel</button>
+                    <button class="dex-btn dex-btn-primary" onclick="saveStock()">Save Item</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: UNIT FORM ───────────────────────────────────── -->
+        <div class="dex-window" id="win-unit-form" style="top: 130px; left: 340px; width: 420px; height: 280px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>📏</span><span>New Unit</span></div>
+                <div class="window-controls"><button class="win-btn close" onclick="closeWindow('win-unit-form')">✕</button></div>
+            </div>
+            <div class="window-body">
+                <div class="dex-form-grid" style="grid-template-columns: 1fr;">
+                    <div class="form-group"><label>Unit Name *</label><input type="text" id="unitName" class="dex-input" placeholder="e.g. Pcs, Kgs, Mtrs"></div>
+                    <div class="form-group"><label>Formal Name (optional)</label><input type="text" id="unitFormal" class="dex-input" placeholder="e.g. Pieces"></div>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+                    <button class="dex-btn dex-btn-subtle" onclick="closeWindow('win-unit-form')">Cancel</button>
+                    <button class="dex-btn dex-btn-primary" onclick="saveUnit()">Save Unit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: VOUCHER VIEW ─────────────────────────────────── -->
+        <div class="dex-window" id="win-voucher-view" style="top: 70px; left: 240px; width: 700px; height: 560px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>🧾</span><span>Voucher Details</span></div>
+                <div class="window-controls"><button class="win-btn close" onclick="closeWindow('win-voucher-view')">✕</button></div>
+            </div>
+            <div class="window-body">
+                <div style="display:flex; gap:8px; margin-bottom:12px;">
+                    <button class="dex-btn dex-btn-primary" onclick="editVoucher(vvCurrentId)">✏️ Edit</button>
+                    <button class="dex-btn dex-btn-subtle" onclick="exportEwayBill(vvCurrentId)">📦 e-Way Bill</button>
+                    <button class="dex-btn dex-btn-subtle" onclick="exportEInvoice(vvCurrentId)">🧾 e-Invoice</button>
+                </div>
+                <div class="dex-form-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="form-group"><label>Voucher #</label><div class="dex-input" id="vvNumber">—</div></div>
+                    <div class="form-group"><label>Type</label><div class="dex-input" id="vvType">—</div></div>
+                    <div class="form-group"><label>Date</label><div class="dex-input" id="vvDate">—</div></div>
+                </div>
+                <div class="form-group" style="margin-bottom:12px;"><label>Narration</label><div class="dex-input" id="vvNarration">—</div></div>
+                <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:6px;">Ledger Entries</div>
+                <div class="pc-table-wrap" style="max-height: 32%; margin-bottom: 12px;">
+                    <table class="pc-table" id="vvEntriesTable">
+                        <thead><tr><th>Ledger</th><th class="tar">Debit (₹)</th><th class="tar">Credit (₹)</th></tr></thead>
+                        <tbody id="vvEntriesBody"></tbody>
+                    </table>
+                </div>
+                <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:6px;">Stock Items</div>
+                <div class="pc-table-wrap" style="max-height: 30%;">
+                    <table class="pc-table" id="vvItemsTable">
+                        <thead><tr><th>Item</th><th class="tar">Qty</th><th class="tar">Rate</th><th class="tar">GST%</th><th class="tar">Amount</th></tr></thead>
+                        <tbody id="vvItemsBody"></tbody>
+                    </table>
+                </div>
+                <div style="font-size:13px; font-weight:700; color:#fff; margin:12px 0 6px;">Party Details for e-Way / e-Invoice <span style="color:var(--amber); font-weight:600;">(required)</span></div>
+                <div class="form-group" style="margin-bottom:8px;"><label>Address</label><input type="text" id="partyAddr" class="dex-input" placeholder="Street, area, city"></div>
+                <div class="dex-form-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="form-group"><label>City</label><input type="text" id="partyPlace" class="dex-input" placeholder="City"></div>
+                    <div class="form-group"><label>Pincode</label><input type="text" id="partyPincode" class="dex-input" placeholder="400001"></div>
+                    <div class="form-group"><label>Distance (km)</label><input type="number" id="partyDistance" class="dex-input" value="50"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── WINDOW: GST REPORT ──────────────────────────────────── -->
+        <div class="dex-window" id="win-gst-report" style="top: 70px; left: 240px; width: 860px; height: 580px; display: none;">
+            <div class="window-header">
+                <div class="window-title"><span>🧾</span><span>GST Summary (HSN-wise)</span></div>
+                <div class="window-controls">
+                    <button class="win-btn" onclick="minimizeWindow('win-gst-report')">_</button>
+                    <button class="win-btn" onclick="toggleMaximize('win-gst-report')">□</button>
+                    <button class="win-btn close" onclick="closeWindow('win-gst-report')">✕</button>
+                </div>
+            </div>
+            <div class="window-body">
+                <div class="dex-kpi-grid">
+                    <div class="kpi-card green"><div class="kpi-label">Taxable Value</div><div class="kpi-value" id="gstTaxable">₹0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Output Tax</div><div class="kpi-value" id="gstOutput">₹0</div></div>
+                    <div class="kpi-card amber"><div class="kpi-label">Input Tax Credit</div><div class="kpi-value" id="gstItc">₹0</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Net Payable</div><div class="kpi-value" id="gstNet">₹0</div></div>
+                </div>
+                <div class="window-toolbar" style="margin-top:6px;">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span style="font-size:13px; font-weight:700; color:#fff;">HSN-wise Output</span>
+                        <button class="dex-btn dex-btn-subtle" onclick="exportGstr1()">📥 GSTR-1</button>
+                        <button class="dex-btn dex-btn-subtle" onclick="exportGstr3b()">📥 GSTR-3B</button>
+                    </div>
+                    <button class="dex-btn dex-btn-subtle" onclick="loadGstReport()">↻ Refresh</button>
+                </div>
+                <div class="pc-table-wrap">
+                    <table class="pc-table" id="gstTable">
+                        <thead><tr><th>HSN</th><th class="tar">Qty</th><th class="tar">Taxable Value (₹)</th><th class="tar">Tax (₹)</th></tr></thead>
+                        <tbody id="gstTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── SAMSUNG DEX TASKBAR (BOTTOM) ──────────────────────────── -->
+    <div id="dex-taskbar">
+        <!-- Left: Start & Search -->
+        <div class="taskbar-left">
+            <button class="start-btn" onclick="toggleStartMenu()" title="Teller Start Menu">❖</button>
+            <div class="taskbar-search-trigger" onclick="openCommandPalette()">
+                <span>🔍 Quick Jump</span>
+                <span class="kbd-badge">Ctrl + K</span>
+            </div>
+        </div>
+
+        <!-- Center: Open Windows -->
+        <div class="taskbar-center" id="taskbarWindowContainer"></div>
+
+        <!-- Right: Function Keys & Tray -->
+        <div class="taskbar-right">
+            <div class="function-keys-bar">
+                <button class="fn-chip" onclick="openNewVoucherWindow('Contra')">F4 <span>Contra</span></button>
+                <button class="fn-chip" onclick="openNewVoucherWindow('Payment')">F5 <span>Payment</span></button>
+                <button class="fn-chip" onclick="openNewVoucherWindow('Receipt')">F6 <span>Receipt</span></button>
+                <button class="fn-chip" onclick="openNewVoucherWindow('Journal')">F7 <span>Journal</span></button>
+                <button class="fn-chip" onclick="openNewVoucherWindow('Sales')">F8 <span>Sales</span></button>
+                <button class="fn-chip" onclick="openNewVoucherWindow('Purchase')">F9 <span>Purchase</span></button>
+            </div>
+
+            <div class="system-tray">
+                <div class="sync-indicator" title="Connected to phone database over local Wi-Fi">
+                    <div class="pulse-circle"></div>
+                    <span>LIVE SYNC</span>
+                </div>
+
+                <button class="win-btn" onclick="toggleFullscreen()" title="DeX Monitor Mode (Fullscreen F11)" style="font-size: 14px; margin-right: 2px;">🖥️</button>
+
+                <div class="clock-widget" onclick="toggleFullscreen()" title="Click for Fullscreen (F11)">
+                    <div class="clock-time" id="dexClockTime">12:00:00</div>
+                    <div class="clock-date" id="dexClockDate">Today</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── START MENU POPUP ───────────────────────────────────────── -->
+    <div id="dex-start-menu">
+        <div class="start-menu-header">
+            <div class="start-profile">
+                <div class="start-avatar">T</div>
+                <div>
+                    <div style="font-weight: 800; font-size: 14px;">Teller DeX Pro</div>
+                    <div style="font-size: 11px; color: var(--primary);">Phone Link Connected</div>
+                </div>
+            </div>
+            <button class="win-btn" onclick="toggleStartMenu()">✕</button>
+        </div>
+
+        <div style="font-size: 11px; font-weight: 700; color: var(--dex-text-dim); text-transform: uppercase;">Accounting Modules</div>
+        <div class="start-items-grid">
+            <div class="start-item" onclick="openWindow('win-dashboard'); toggleStartMenu();">
+                <span class="start-item-icon">📊</span>
+                <span class="start-item-title">Dashboard</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-daybook'); toggleStartMenu();">
+                <span class="start-item-icon">📑</span>
+                <span class="start-item-title">Daybook</span>
+            </div>
+            <div class="start-item" onclick="openNewVoucherWindow('Sales'); toggleStartMenu();">
+                <span class="start-item-icon">⚡</span>
+                <span class="start-item-title">New Invoice</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-ledgers'); toggleStartMenu();">
+                <span class="start-item-icon">👥</span>
+                <span class="start-item-title">Ledgers</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-stock'); toggleStartMenu();">
+                <span class="start-item-icon">📦</span>
+                <span class="start-item-title">Inventory</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-trial-balance'); toggleStartMenu();">
+                <span class="start-item-icon">⚖️</span>
+                <span class="start-item-title">Trial Balance</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-register'); toggleStartMenu();">
+                <span class="start-item-icon">📒</span>
+                <span class="start-item-title">Registers</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-ledger-statement'); toggleStartMenu();">
+                <span class="start-item-icon">📄</span>
+                <span class="start-item-title">Ledger Statement</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-outstanding'); toggleStartMenu();">
+                <span class="start-item-icon">⏳</span>
+                <span class="start-item-title">Outstanding</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-stock-summary'); toggleStartMenu();">
+                <span class="start-item-icon">📦</span>
+                <span class="start-item-title">Stock Summary</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-profit-loss'); toggleStartMenu();">
+                <span class="start-item-icon">📈</span>
+                <span class="start-item-title">Profit &amp; Loss</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-balance-sheet'); toggleStartMenu();">
+                <span class="start-item-icon">🏛️</span>
+                <span class="start-item-title">Balance Sheet</span>
+            </div>
+            <div class="start-item" onclick="openWindow('win-gst-report'); toggleStartMenu();">
+                <span class="start-item-icon">🧾</span>
+                <span class="start-item-title">GST Report</span>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--dex-border); padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 11px; color: var(--dex-text-dim);">Fast PC Mechanical Accounting</span>
+            <button class="dex-btn dex-btn-subtle" onclick="toggleFullscreen(); toggleStartMenu();" style="padding: 4px 8px; font-size: 11px;">Fullscreen</button>
+        </div>
+    </div>
+
+    <!-- ── COMMAND PALETTE (CTRL+K) ───────────────────────────────── -->
+    <div id="dex-command-palette">
+        <div class="cmd-input-wrap">
+            <span>⚡</span>
+            <input type="text" id="cmdInput" placeholder="Type a command or search ledger, stock, daybook..." oninput="handleCommandSearch(this.value)">
+            <span class="kbd-badge">ESC</span>
+        </div>
+        <div class="cmd-results" id="cmdResults"></div>
+    </div>
+
+    <!-- Toast -->
+    <!-- Shown when the phone can't be reached (asleep, off Wi-Fi, app closed) -->
+    <div id="conn-banner" role="alert">
+        <span class="conn-dot"></span>
+        <span><b>Can't reach your phone.</b> Keep the Teller app open on the phone, on the same Wi-Fi as this computer. Retrying automatically…</span>
+    </div>
+
+    <!-- Approve-on-phone pairing -->
+    <div id="pair-overlay">
+        <div class="pair-card">
+            <div class="pair-logo">T</div>
+            <h2>Connect to your phone</h2>
+            <div id="pair-code">····</div>
+            <p id="pair-msg">Contacting your phone…</p>
+            <button id="pair-retry" onclick="startPairing()">Try again</button>
+        </div>
+    </div>
+
+    <div id="dex-toast"></div>
+
+    <!-- Context Menu -->
+    <div id="dex-context-menu">
+        <div class="context-item" onclick="contextPrintVoucher()">🖨️ Print Invoice</div>
+        <div class="context-item" onclick="contextCopyVoucherNo()">📋 Copy Voucher #</div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script src="/quickbill.js"></script>
+</body>
+</html>

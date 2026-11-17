@@ -1,0 +1,62 @@
+# Gradle & Kotlin caches
+.gradle/
+.gradle_home/
+build/
+**/build/
+.kotlin/
+*.hprof
+
+# IDE & Editor files
+.idea/
+.vscode/
+.trae/
+*.iml
+*.ipr
+*.iws
+
+# Local configuration
+local.properties
+*.local
+
+# iOS & Xcode build artifacts
+**/iosApp/build/
+**/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
+**/iosApp.xcodeproj/xcuserdata/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcuserdatad
+*.nib
+*.xcuserstate
+.DS_Store
+
+# Secrets & Keys
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+*.key
+google-services.json
+GoogleService-Info.plist
+
+# Binary artifacts & logs
+*.apk
+*.aab
+*.ipa
+*.zip
+*.log
+*.txt
+hs_err_pid*.log
+replay_pid*.log
+tombstone_*.txt
+node_modules/
+
+# Root media & loose docs
+/*.pdf
+/*.mp4
+/*.png
+/*.jpg
+/*.001
+/*.tbk
+/apktool.jar
+/temp_apk_inspect/
+/.aider.*

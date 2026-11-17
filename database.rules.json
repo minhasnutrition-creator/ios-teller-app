@@ -1,0 +1,135 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    // ------------------------------------------------------------------
+    // Cloud Sync (Google sign-in). Each account's data is partitioned under
+    // users/{firebaseUid}/data/... and is only readable/writable by that same
+    // authenticated user. This is the first node in the project gated on
+    // Firebase Auth (auth.uid), and is strictly more locked down than the
+    // code-keyed nodes below.
+    // ------------------------------------------------------------------
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "licenses": {
+      "$licenseKey": {
+        // A license record's core fields (type, plan, source, purchaseToken, productId, created,
+        // active) are only ever written by the verifyPurchase / revalidateLicense Cloud Functions
+        // via the Admin SDK, which bypasses these rules entirely. Client apps therefore get NO
+        // write access to a license node as a whole — this closes the hole where PlayBillingManager
+        // used to write "type": "PREMIUM" straight from the app with nothing checking a real
+        // purchase happened.
+        ".read": true,
+        ".write": false,
+
+        "devices": {
+          // Multi-device activation ("Already have a key?" flow in LicenseScreen) still needs the
+          // client to be able to register its own device against a key the user already owns and
+          // typed in manually. We allow appending a device id here (but never touching type/plan/
+          // source/purchaseToken/active), and validate it's a plausible ANDROID_ID-shaped string.
+          // This is best-effort: this project has no Firebase Auth wired up yet, so these rules
+          // can't verify *who* is writing, only *what shape* the write is. Adding Firebase Auth +
+          // per-user rules (or Play Integrity token checks) is a good follow-up hardening step.
+          // Device slots are "0".."N-1" where N is the plan's device limit (SINGLE 1, MULTI_3 3,
+          // GOLD 10 - see LicenseUtils.LicenseType). A client may only fill an EMPTY slot below that
+          // limit, or clear a slot (surrender). It can never overwrite another device's slot or add
+          // slot N+1, so one key can no longer be shared across unlimited phones.
+          "$index": {
+            ".write": "(!data.exists() && newData.exists() && $index.matches(/^[0-9]$/) && ($index == '0' || (root.child('licenses').child($licenseKey).child('type').val() == 'MULTI_3' && $index.matches(/^[0-2]$/)) || root.child('licenses').child($licenseKey).child('type').val() == 'GOLD')) || (data.exists() && !newData.exists())",
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 64"
+          }
+        }
+      }
+    },
+
+    "play_store_users": {
+      // machineId -> licenseKey lookup. Only ever written by verifyPurchase (Admin SDK) after a
+      // server-verified purchase. Client can read (LicenseUtils.provisionPlayStoreLicense reads
+      // this to find an already-issued key for a returning device) but never write — previously
+      // this had no rule at all restricting it, which combined with the client-side auto-grant
+      // bug meant anyone could hand themselves a license.
+      "$machineId": {
+        ".read": true,
+        ".write": false
+      }
+    },
+
+    "trials": {
+      // Trial start timestamp per device. Client may create it once (first launch) but must never
+      // be able to overwrite an existing value — otherwise a malicious client could just push a
+      // fresh timestamp to reset/extend their trial indefinitely.
+      "$machineId": {
+        ".read": true,
+        ".write": "!data.exists()",
+        ".validate": "newData.isNumber() && newData.val() <= now"
+      }
+    },
+
+    "pairing_sessions": {
+      // Zero-typing PC companion handshake: the hosted desktop page creates a "waiting" session
+      // and shows its QR; the phone scans the QR and writes its LAN ip + web-server token back as
+      // "paired". Both sides are anonymous — the random sessionId is the shared secret (same
+      // best-effort model as the code-keyed nodes below). The page uses the Realtime Database REST
+      // API and the phone uses the SDK, so this node must be readable/writable without Firebase
+      // Auth. Shape-gated below; a scheduled function prunes stale sessions.
+      "$sessionId": {
+        ".read": true,
+        ".write": true,
+        ".validate": "newData.hasChild('status') && newData.child('status').isString()"
+      }
+    },
+
+    // ------------------------------------------------------------------
+    // Live Stock sync (manager Teller app <-> employee Teller Team app) and
+    // Daily Tasks (below) are keyed by the employee's code. The code is the
+    // shared secret, so it must be unguessable: new codes are 10 characters
+    // from A-H J-N P-Z 2-9 (~10^15 combinations, see TeamCodes.kt). The root
+    // is not listable, so a code can't be discovered by browsing.
+    //
+    // CHANGEOVER: legacy 6-digit codes (1 million combinations - scriptable
+    // in minutes) are still accepted so nothing breaks while Teller upgrades
+    // them. Once managers have opened the updated Teller (it moves each
+    // employee's data to a new code automatically), delete
+    //   || ($code.length == 6 && $code.matches(/^[0-9]+$/))
+    // from all ten rules in this file and redeploy.
+    // ------------------------------------------------------------------
+    "stock": {
+      "$code": { ".read": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))", ".write": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))" }
+    },
+    "transactions": {
+      "$code": { ".read": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))", ".write": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))" }
+    },
+    "pending_transactions": {
+      "$code": { ".read": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))", ".write": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))" }
+    },
+
+    // ------------------------------------------------------------------
+    // Daily Tasks feature. Keyed by each employee's unique 6-digit code.
+    //   task_config/{code}  -> employee name, dept, and the task list the
+    //                          manager built (label + type per task).
+    //   task_reports/{code}/{yyyy-MM-dd} -> one day's submitted report:
+    //                          arrival/departure times, per-task entries,
+    //                          status (PENDING/APPROVED) + manager notes.
+    // Same best-effort model as stock above: knowledge of the code is the
+    // shared secret. Harden later with Firebase Auth / App Check.
+    // ------------------------------------------------------------------
+    "task_config": {
+      "$code": {
+        ".read": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))",
+        ".write": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))"
+      }
+    },
+    "task_reports": {
+      "$code": {
+        ".read": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))",
+        ".write": "($code.length == 10 && $code.matches(/^[A-HJ-NP-Z2-9]+$/)) || ($code.length == 6 && $code.matches(/^[0-9]+$/))"
+      }
+    }
+  }
+}
