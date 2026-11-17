@@ -31,7 +31,7 @@ object EasyPrint {
         val address: String? = null,
         val port: Int = 9100,
         /** Only for [Kind.USB] — a USB printer is a live handle, not an address we can save. */
-        val usbDevice: android.hardware.usb.UsbDevice? = null
+        val usbDevice: Any? = null
     )
 
     sealed class Outcome {

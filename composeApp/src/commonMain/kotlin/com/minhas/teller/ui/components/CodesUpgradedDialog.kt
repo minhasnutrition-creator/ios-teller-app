@@ -36,10 +36,10 @@ fun CodesUpgradedDialog(moved: List<TeamCodes.MovedCode>, onDismiss: () -> Unit)
         title = { Text(TerminologyManager.getTerm("Team codes upgraded"), fontWeight = FontWeight.Bold) },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Text(TerminologyManager.getTerm("For security, your team's 6-digit codes were replaced with longer codes that can't be guessed. All stock, tasks and reports were moved over. Send each person their new code - they enter it once in the Teller Team app."))
+                Text(TerminologyManager.getTerm("For security, your team's codes were upgraded. Send each person their code — they enter it in the 'Task and Stock for Teller' app (free on App Store)."))
                 moved.forEach { m ->
                     val pretty = TeamCodes.format(m.newCode)
-                    val shareText = TerminologyManager.getTerm("Your new Teller Team code is %s. Open the Teller Team app and enter this code to reconnect.").replace("%s", pretty)
+                    val shareText = "Your connection code for 'Task and Stock for Teller' is $pretty. Install the free app from the App Store and enter this code to connect."
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,

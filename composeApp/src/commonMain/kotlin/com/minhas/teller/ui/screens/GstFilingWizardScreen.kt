@@ -1,10 +1,7 @@
 package com.minhas.teller.ui.screens
 
 import com.minhas.teller.utils.TerminologyManager
-import android.content.ContentValues
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
+import com.minhas.teller.PlatformUtils
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -248,25 +245,15 @@ private fun shiftFp(fp: String, delta: Int): String {
     return String.format(Locale.US, "%02d%04d", cal.get(Calendar.MONTH) + 1, cal.get(Calendar.YEAR))
 }
 
-/** Save a JSON file to the shared Downloads folder (MediaStore on 10+, legacy fallback below). */
+/** Save a JSON file to the app documents directory. */
 private fun saveJsonToDownloads(context: android.content.Context, fileName: String, content: String): Boolean {
     return try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val values = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, fileName)
-                put(MediaStore.Downloads.MIME_TYPE, "application/json")
-                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-            }
-            val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                ?: return false
-            context.contentResolver.openOutputStream(uri)?.use { it.write(content.toByteArray()) } ?: return false
-            true
-        } else {
-            val file = File(context.getExternalFilesDir(null), fileName)
-            file.writeText(content)
-            ExportUtils.saveFileToDownloads(context, file, fileName, "application/json")
-        }
-    } catch (e: Exception) {
+        val dir = File(PlatformUtils.getAppDataDirectory())
+        if (!dir.exists()) dir.mkdirs()
+        val file = File(dir, fileName)
+        file.writeText(content)
+        true
+    } catch (_: Exception) {
         false
     }
 }

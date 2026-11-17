@@ -69,23 +69,13 @@ private val STOCK_COLORS = listOf(
     Color(0xFF333333)  // Dark Grey
 )
 
-fun shareTeamApp(context: Context) {
-    try {
-        val outFile = File(context.cacheDir, "TellerTeam.apk")
-        context.assets.open("teamapp.apk").use { input ->
-            FileOutputStream(outFile).use { output -> input.copyTo(output) }
-        }
-        val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", outFile)
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "application/vnd.android.package-archive"
-            putExtra(Intent.EXTRA_STREAM, uri)
-            putExtra(Intent.EXTRA_TEXT, "Install this Teller Team app on your phone. When it asks for a code, enter the code your manager gave you. The same code works for Daily Tasks and Live Stock.")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
-        context.startActivity(Intent.createChooser(intent, "Share Teller Team App"))
-    } catch (e: Exception) {
-        Toast.makeText(context, "Error sharing app: ${e.message}", Toast.LENGTH_LONG).show()
+fun shareTeamApp(context: Context, employeeCode: String? = null) {
+    val message = if (!employeeCode.isNullOrBlank()) {
+        "Download the free 'Task and Stock for Teller' app from the App Store on your iPhone. Open the app and enter your connection code: $employeeCode to get connected."
+    } else {
+        "Download the free 'Task and Stock for Teller' app from the App Store on your iPhone. It is free to download. Once installed, enter the employee code provided by your manager to get connected."
     }
+    com.minhas.teller.PlatformUtils.shareText(message, "Task and Stock for Teller")
 }
 
 private fun colorToHex(color: Color): String {
@@ -1015,7 +1005,7 @@ fun LiveStockManagementScreen(navController: NavController, currentAppTheme: App
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Default.Share, null, tint = Color(0xFF4DD0E1), modifier = Modifier.size(18.dp))
                                 Spacer(Modifier.width(8.dp))
-                                Text(TerminologyManager.getTerm("Share Team App"),
+                                Text("Connect Employee App",
                                     color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold,
                                     modifier = Modifier.weight(1f)
                                 )
@@ -1027,8 +1017,8 @@ fun LiveStockManagementScreen(navController: NavController, currentAppTheme: App
                                 }
                             }
                             Spacer(Modifier.height(6.dp))
-                            Text(TerminologyManager.getTerm("Send the app to your employees. They can update stock and complete daily tasks. Use the 3-dot menu → Show Code to give them the activation code."),
-                                color = Color.White.copy(alpha = 0.75f), fontSize = 11.sp
+                            Text("Ask employees to install 'Task and Stock for Teller' from the App Store on their iPhone (free download). Send them their connection code to get connected.",
+                                color = Color.White.copy(alpha = 0.85f), fontSize = 12.sp
                             )
                             Spacer(Modifier.height(10.dp))
                             Button(
@@ -1042,14 +1032,14 @@ fun LiveStockManagementScreen(navController: NavController, currentAppTheme: App
                             ) {
                                 Icon(Icons.Default.Share, null, modifier = Modifier.size(16.dp))
                                 Spacer(Modifier.width(6.dp))
-                                Text(TerminologyManager.getTerm("Share with employee"), fontSize = 13.sp)
+                                Text("Share App Name & Instructions", fontSize = 13.sp)
                             }
                         }
                     } else {
                         Row(modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Share, null, tint = Color(0xFF4DD0E1), modifier = Modifier.size(16.dp))
                             Spacer(Modifier.width(6.dp))
-                            Text(TerminologyManager.getTerm("Share Team App"),
+                            Text("Connect Employee App (Task and Stock for Teller)",
                                 color = Color.White.copy(alpha = 0.9f), fontSize = 12.sp, fontWeight = FontWeight.Medium,
                                 modifier = Modifier.weight(1f)
                             )

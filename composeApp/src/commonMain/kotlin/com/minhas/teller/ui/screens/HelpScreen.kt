@@ -465,7 +465,7 @@ val helpCategories = listOf(
                 steps = listOf(
                     HelpStep("Open Daily Tasks", "On Home screen, tap 'Daily Tasks'. You'll see your employee list (empty at first).", Icons.Default.Checklist),
                     HelpStep("Add employee", "Tap + button. Type their name. A secret 10-character code is created automatically — this is their login key.", Icons.Default.PersonAdd),
-                    HelpStep("Send them the app", "Tap 'Share Team App' to send the employee APK via WhatsApp. Then show them the 📱 Install Guide so they know how to install it.", Icons.Default.Share),
+                    HelpStep("Tell them to install the app", "Ask them to install 'Task and Stock for Teller' from the App Store (it is free). Tap 'Share Connection Code' to send them their code via WhatsApp or Messages.", Icons.Default.Share),
                     HelpStep("They connect with the code", "Employee opens the app on their phone, types the 10-character code, and BAM — connected to you!", Icons.Default.PhoneAndroid),
                     HelpStep("Create their tasks", "Tap the employee name → Tasks tab → Add Task. Choose type: Tick (Done/Not Done), Number, Amount, or Text. Set for how many days (or Always).", Icons.AutoMirrored.Filled.PlaylistAdd),
                     HelpStep("Watch live progress", "Green check ✓ = done. Red cross ✗ = not done. Grey = waiting. You see it updating LIVE as they work!", Icons.Default.Visibility)

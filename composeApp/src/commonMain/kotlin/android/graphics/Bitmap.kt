@@ -1,27 +1,92 @@
 package android.graphics
 
-class Bitmap {
-    val width: Int get() = 0
-    val height: Int get() = 0
+import androidx.compose.ui.graphics.ImageBitmap
+
+open class Bitmap {
+    var width: Int = 100
+    var height: Int = 100
 
     enum class Config {
         ARGB_8888,
         RGB_565
     }
 
+    enum class CompressFormat {
+        JPEG,
+        PNG,
+        WEBP
+    }
+
+    fun compress(format: CompressFormat, quality: Int, stream: java.io.OutputStream): Boolean {
+        return true
+    }
+
+    fun setPixel(x: Int, y: Int, color: Int) {}
+    fun getPixel(x: Int, y: Int): Int = 0
+
     companion object {
-        fun createBitmap(width: Int, height: Int, config: Config): Bitmap = Bitmap()
+        fun createBitmap(width: Int, height: Int, config: Config): Bitmap {
+            val b = Bitmap()
+            b.width = width
+            b.height = height
+            return b
+        }
     }
 }
 
-class Canvas(val bitmap: Bitmap? = null) {
-    fun drawColor(color: Int) {}
+fun Bitmap.asImageBitmap(): ImageBitmap =
+    ImageBitmap(width.coerceAtLeast(1), height.coerceAtLeast(1))
+
+class Path {
+    fun moveTo(x: Float, y: Float) {}
+    fun lineTo(x: Float, y: Float) {}
+    fun quadTo(x1: Float, y1: Float, x2: Float, y2: Float) {}
+    fun reset() {}
+    fun close() {}
+}
+
+class RectF(
+    var left: Float = 0f,
+    var top: Float = 0f,
+    var right: Float = 0f,
+    var bottom: Float = 0f
+) {
+    fun width(): Float = right - left
+    fun height(): Float = bottom - top
+}
+
+class Typeface {
+    companion object {
+        val DEFAULT = Typeface()
+        val DEFAULT_BOLD = Typeface()
+        const val BOLD = 1
+        const val NORMAL = 0
+        fun create(family: String?, style: Int): Typeface = Typeface()
+    }
 }
 
 class Paint {
     var color: Int = 0
     var strokeWidth: Float = 1f
     var isAntiAlias: Boolean = true
+    var style: Style = Style.FILL
+    var strokeCap: Cap = Cap.BUTT
+    var strokeJoin: Join = Join.MITER
+    var textSize: Float = 12f
+    var typeface: Typeface? = null
+
+    enum class Style { FILL, STROKE, FILL_AND_STROKE }
+    enum class Cap { BUTT, ROUND, SQUARE }
+    enum class Join { MITER, ROUND, BEVEL }
+}
+
+class Canvas(val bitmap: Bitmap? = null) {
+    fun drawColor(color: Int) {}
+    fun drawPath(path: Path, paint: Paint) {}
+    fun drawText(text: String, x: Float, y: Float, paint: Paint) {}
+    fun drawRect(rect: RectF, paint: Paint) {}
+    fun drawRoundRect(rect: RectF, rx: Float, ry: Float, paint: Paint) {}
+    fun drawLine(startX: Float, startY: Float, stopX: Float, stopY: Float, paint: Paint) {}
 }
 
 object Color {
