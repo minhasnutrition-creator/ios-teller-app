@@ -1,5 +1,7 @@
 package com.minhas.teller
 
+import com.minhas.teller.data.AppDatabase
+import com.minhas.teller.database.getIosDatabaseBuilder
 import platform.Foundation.*
 import platform.UIKit.*
 
@@ -10,6 +12,16 @@ class IOSPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
+private var databaseInstance: AppDatabase? = null
+
+actual fun getAppDatabase(): AppDatabase {
+    return databaseInstance ?: run {
+        val instance = getIosDatabaseBuilder().build()
+        databaseInstance = instance
+        instance
+    }
+}
 
 actual object PlatformUtils {
     actual fun showToast(message: String) {

@@ -411,18 +411,9 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        fun getDatabase(context: Context): AppDatabase {
+        fun getDatabase(context: Any? = null): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    DB_NAME
-                )
-                .addMigrations(MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22, MIGRATION_22_23, MIGRATION_23_24, MIGRATION_24_25, MIGRATION_25_26, MIGRATION_26_27, MIGRATION_27_28, MIGRATION_28_29, MIGRATION_29_30, MIGRATION_30_31, MIGRATION_31_32, MIGRATION_32_33)
-                // No destructive fallback on downgrade: an older APK installed over a newer one must
-                // never wipe the user's books. MainActivity checks DatabaseVersionGuard.isDowngrade()
-                // first and shows an "update the app" screen instead of opening the database.
-                .build()
+                val instance = com.minhas.teller.getAppDatabase()
                 INSTANCE = instance
                 instance
             }
