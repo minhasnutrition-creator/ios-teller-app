@@ -2,7 +2,6 @@ package com.minhas.teller.ui.viewmodels
 
 import android.content.Context
 import android.net.Uri
-import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -88,28 +87,10 @@ class ImportCleanupViewModel(
     private var allParsedRows: List<UniversalParser.TabularRow> = emptyList()
 
     private fun getRealFileName(context: Context, uri: Uri): String {
-        var result: String? = null
-        if (uri.scheme == "content") {
-            try {
-                val cursor = context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)
-                cursor?.use {
-                    if (it.moveToFirst()) {
-                        val idx = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                        if (idx >= 0) {
-                            result = it.getString(idx)
-                        }
-                    }
-                }
-            } catch (_: Exception) {}
-        }
-        if (result.isNullOrBlank()) {
-            result = uri.path
-            val cut = result?.lastIndexOf('/') ?: -1
-            if (cut != -1) {
-                result = result?.substring(cut + 1)
-            }
-        }
-        return result ?: "selected_file"
+        val path = uri.path ?: ""
+        val cut = path.lastIndexOf('/')
+        val name = if (cut != -1) path.substring(cut + 1) else path
+        return name.ifBlank { "selected_file" }
     }
 
     fun loadJobs(companyId: Int) {

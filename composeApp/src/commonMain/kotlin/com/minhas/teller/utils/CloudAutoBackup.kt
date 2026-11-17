@@ -26,7 +26,7 @@ object CloudAutoBackup {
         backupJob = scope.launch {
             delay(1200) // 1.2 second debounce to bundle closely-spaced writes
             try {
-                val app = runCatching { TellerApp.instance }.getOrNull() ?: return@launch
+                val app = runCatching { android.app.Application() }.getOrNull() ?: return@launch
                 val engine = CloudSyncEngine(app)
                 val result = engine.backup()
                 Log.i("CloudAutoBackup", "Auto-backup complete: ${result.message}")
