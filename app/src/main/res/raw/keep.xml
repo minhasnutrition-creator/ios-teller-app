@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- R8's resource shrinker strips these Crashlytics resources because the Crashlytics SDK reads
-     them via reflection (getResourcesIdentifier), which the shrinker can't trace. The Crashlytics
-     *Gradle plugin* would normally keep them, but it's skipped for AGP 9.0 compatibility (see
-     app/build.gradle), so we keep them by hand here. -->
-<resources xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@string/com.crashlytics.android.build_id,@string/com.google.firebase.crashlytics.mapping_file_id" />
