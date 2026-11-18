@@ -27,3 +27,13 @@ object Math {
     const val PI: Double = kotlin.math.PI
     const val E: Double = kotlin.math.E
 }
+
+object Integer {
+    fun bitCount(i: Int): Int = i.countOneBits()
+    fun toBinaryString(i: Int): String = i.toString(2)
+    fun toHexString(i: Int): String = i.toString(16)
+    fun parseInt(s: String): Int = s.toInt()
+    fun parseInt(s: String, radix: Int): Int = s.toInt(radix)
+    const val MAX_VALUE: Int = Int.MAX_VALUE
+    const val MIN_VALUE: Int = Int.MIN_VALUE
+}

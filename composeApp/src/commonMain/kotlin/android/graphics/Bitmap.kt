@@ -23,9 +23,11 @@ open class Bitmap {
 
     fun setPixel(x: Int, y: Int, color: Int) {}
     fun setPixels(pixels: IntArray, offset: Int, stride: Int, x: Int, y: Int, width: Int, height: Int) {}
+    fun getPixels(pixels: IntArray, offset: Int, stride: Int, x: Int, y: Int, width: Int, height: Int) {}
     fun getPixel(x: Int, y: Int): Int = 0
     fun eraseColor(color: Int) {}
     fun recycle() {}
+    val isRecycled: Boolean get() = false
 
     companion object {
         fun createBitmap(width: Int, height: Int, config: Config): Bitmap {
@@ -66,12 +68,19 @@ class Typeface {
         const val BOLD = 1
         const val NORMAL = 0
         fun create(family: String?, style: Int): Typeface = Typeface()
+        fun create(family: Typeface?, style: Int): Typeface = Typeface()
     }
 }
 
 class BlurMaskFilter(val radius: Float, val style: Blur) {
     enum class Blur { NORMAL, SOLID, OUTER, INNER }
 }
+
+open class ColorMatrix {
+    fun setSaturation(sat: Float) {}
+}
+
+open class ColorMatrixColorFilter(val matrix: Any? = null)
 
 class Paint {
     var color: Int = 0
@@ -86,6 +95,7 @@ class Paint {
     var textAlign: Align = Align.LEFT
     var isFakeBoldText: Boolean = false
     var maskFilter: Any? = null
+    var colorFilter: Any? = null
 
     enum class Style { FILL, STROKE, FILL_AND_STROKE }
     enum class Cap { BUTT, ROUND, SQUARE }
@@ -124,6 +134,12 @@ object Color {
     const val GREEN = -16711936
     const val BLUE = -16776961
     const val TRANSPARENT = 0
+    const val LTGRAY = -3355444
+    const val GRAY = -7829368
+    const val DKGRAY = -12303292
+    const val YELLOW = -256
+    const val CYAN = -16711681
+    const val MAGENTA = -65281
 
     fun parseColor(colorString: String): Int = 0
 }

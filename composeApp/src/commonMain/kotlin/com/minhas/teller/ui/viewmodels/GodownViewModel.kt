@@ -56,7 +56,7 @@ class GodownViewModel(private val repository: GodownRepository) : ViewModel() {
 }
 
 class GodownViewModelFactory(private val repository: GodownRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
         if (modelClass.isAssignableFrom(GodownViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return GodownViewModel(repository) as T

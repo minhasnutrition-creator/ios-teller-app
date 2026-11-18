@@ -108,10 +108,6 @@ object ExportUtils {
     // Dedicated scope replaces GlobalScope — tied to object lifetime, cancelled if process dies
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
-    init {
-        com.minhas.teller.TellerApp.configureGlobalProperties()
-    }
-
     private const val SHARE_LINK_BASE = "https://teller.finance/invoice/"
 
     enum class ReportTheme {

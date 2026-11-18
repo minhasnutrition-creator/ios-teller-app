@@ -76,72 +76,9 @@ object OcrHelper {
      * If the traineddata files aren't available yet, Tess is silently skipped
      * and we rely on ML Kit alone.
      */
-    private fun ensureTesseract(context: Context) {
-        synchronized(tessLock) {
-            if (tessReady) return
-            try {
-                // Try to load the Tesseract class – only if the JAR is on the classpath
-                val clazz = Class.forName("com.googlecode.tesseract.android.TessBaseAPI")
-                val api = clazz.getDeclaredConstructor().newInstance()
-                val dataPath = File(context.filesDir, "tesseract").absolutePath
-                val initMethod = clazz.getMethod("init", String::class.java, String::class.java)
-
-                // Check if at least Hindi traineddata exists
-                val hinFile = File(dataPath, "tessdata/hin.traineddata")
-                if (!hinFile.exists()) {
-                    // Try to copy from assets
-                    copyTessDataFromAssets(context, dataPath)
-                }
-
-                if (hinFile.exists()) {
-                    initMethod.invoke(api, dataPath, "hin+eng")  // Hindi + English
-                    tessApi = api
-                    tessReady = true
-                    Log.i(TAG, "Tesseract initialised with hin+eng")
-                } else {
-                    Log.i(TAG, "Tesseract traineddata not found — using ML Kit only")
-                }
-            } catch (e: ClassNotFoundException) {
-                Log.i(TAG, "Tesseract library not available — using ML Kit only")
-            } catch (e: Exception) {
-                Log.w(TAG, "Tesseract init failed — falling back to ML Kit", e)
-            }
-        }
-    }
-
-    private fun copyTessDataFromAssets(context: Context, dataPath: String) {
-        try {
-            val tessDir = File(dataPath, "tessdata")
-            if (!tessDir.exists()) tessDir.mkdirs()
-            val assets = context.assets
-            val files = assets.list("tessdata") ?: return
-            for (filename in files) {
-                val outFile = File(tessDir, filename)
-                if (!outFile.exists()) {
-                    assets.open("tessdata/$filename").use { input ->
-                        outFile.outputStream().use { output -> input.copyTo(output) }
-                    }
-                    Log.i(TAG, "Copied tessdata/$filename from assets")
-                }
-            }
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not copy tessdata from assets", e)
-        }
-    }
-
-    private fun runTesseract(bitmap: Bitmap): String {
-        synchronized(tessLock) {
-            if (!tessReady || tessApi == null) return ""
-            return try {
-                val clazz = tessApi!!::class.java
-                clazz.getMethod("setImage", Bitmap::class.java).invoke(tessApi, bitmap)
-                clazz.getMethod("getUTF8Text").invoke(tessApi) as? String ?: ""
-            } catch (e: Exception) {
-                Log.e(TAG, "Tesseract OCR failed", e)
-                ""
-            }
-        }
-    }
+    private fun ensureTesseract(context: Context) {}
+    private fun copyTessDataFromAssets(context: Context, dataPath: String) {}
+    private fun runTesseract(bitmap: Bitmap): String = ""
 
     // ── Image preprocessing ──────────────────────────────────────────────────
     /**
@@ -229,8 +166,8 @@ object OcrHelper {
                     Entity.TYPE_MONEY -> {
                         val m = entity.asMoneyEntity()
                         if (m != null) {
-                            val value = m.integerPart + m.fractionalPart / 100.0
-                            if (value > 0 && (maxMoney == null || value > maxMoney!!)) maxMoney = value
+                            val value = m.integerPart.toDouble() + m.fractionalPart.toDouble() / 100.0
+                            if (value > 0.0 && (maxMoney == null || value > (maxMoney ?: 0.0))) maxMoney = value
                         }
                     }
                     Entity.TYPE_DATE_TIME -> {

@@ -15,9 +15,7 @@ open class Bundle {
 }
 
 open class Handler(val looper: Any? = null) {
-    open fun post(r: () -> Unit): Boolean { r(); return true }
     open fun post(r: Runnable): Boolean { r.run(); return true }
-    open fun postDelayed(r: () -> Unit, delayMillis: Long): Boolean { return true }
     open fun postDelayed(r: Runnable, delayMillis: Long): Boolean { return true }
     open fun removeCallbacks(r: Any?) {}
     open fun removeCallbacksAndMessages(token: Any?) {}

@@ -75,6 +75,13 @@ enum class TimeUnit {
 }
 
 class ConcurrentHashMap<K, V>(private val map: MutableMap<K, V> = mutableMapOf()) : MutableMap<K, V> by map {
+    // initialCapacity (and optional loadFactor/concurrencyLevel) hints are meaningless for the
+    // plain LinkedHashMap-backed shim below, but the constructor overloads are kept so call
+    // sites like `ConcurrentHashMap<K, V>(512)` from the JVM-era codebase still compile.
+    constructor(initialCapacity: Int) : this(LinkedHashMap())
+    constructor(initialCapacity: Int, loadFactor: Float) : this(LinkedHashMap())
+    constructor(initialCapacity: Int, loadFactor: Float, concurrencyLevel: Int) : this(LinkedHashMap())
+
     fun putIfAbsent(key: K, value: V): V? {
         val current = get(key)
         if (current == null) {

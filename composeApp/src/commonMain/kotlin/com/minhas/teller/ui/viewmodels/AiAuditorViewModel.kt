@@ -345,7 +345,7 @@ class AiAuditorViewModelFactory(
     private val ledgerRepository: LedgerRepository
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
         if (modelClass.isAssignableFrom(AiAuditorViewModel::class.java)) {
             return AiAuditorViewModel(voucherRepository, ledgerRepository) as T
         }

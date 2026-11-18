@@ -110,7 +110,7 @@ object TeamCodes {
             val copies = mutableMapOf<String, Any?>()
             for (node in NODES) {
                 val snap = db.getReference(node).child(old).get().await()
-                if (snap.exists()) copies["/$node/$new"] = snap.value
+                if (snap?.exists() == true) copies["/$node/$new"] = snap?.value
             }
             if (copies.isNotEmpty()) db.reference.updateChildren(copies).await()
 

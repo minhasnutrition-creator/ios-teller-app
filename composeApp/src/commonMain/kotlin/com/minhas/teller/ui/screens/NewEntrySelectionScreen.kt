@@ -239,9 +239,9 @@ private fun Modifier.neumorphicShadow(
         }
         val frameworkPaintDark = paintDark.asFrameworkPaint()
         if (blurPx > 0) {
-            frameworkPaintDark.maskFilter = android.graphics.BlurMaskFilter(
-                blurPx,
-                android.graphics.BlurMaskFilter.Blur.NORMAL
+            frameworkPaintDark.maskFilter = org.jetbrains.skia.MaskFilter.makeBlur(
+                org.jetbrains.skia.FilterBlurMode.NORMAL,
+                blurPx
             )
         }
         
@@ -251,9 +251,9 @@ private fun Modifier.neumorphicShadow(
         }
         val frameworkPaintLight = paintLight.asFrameworkPaint()
         if (blurPx > 0) {
-            frameworkPaintLight.maskFilter = android.graphics.BlurMaskFilter(
-                blurPx,
-                android.graphics.BlurMaskFilter.Blur.NORMAL
+            frameworkPaintLight.maskFilter = org.jetbrains.skia.MaskFilter.makeBlur(
+                org.jetbrains.skia.FilterBlurMode.NORMAL,
+                blurPx
             )
         }
         

@@ -77,7 +77,7 @@ class UnitViewModel(private val repository: UnitRepository) : ViewModel() {
 }
 
 class UnitViewModelFactory(private val repository: UnitRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
         if (modelClass.isAssignableFrom(UnitViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return UnitViewModel(repository) as T

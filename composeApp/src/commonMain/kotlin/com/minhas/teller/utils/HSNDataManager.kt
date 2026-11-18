@@ -359,21 +359,7 @@ class HSNDataManager private constructor(private val context: Context) {
      * Get file name from URI
      */
     private fun getFileName(uri: Uri): String {
-        var result = "unknown"
-        if (uri.scheme == "content") {
-            context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) {
-                    val index = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
-                    if (index >= 0) {
-                        result = cursor.getString(index) ?: "unknown"
-                    }
-                }
-            }
-        }
-        if (result == "unknown") {
-            result = uri.lastPathSegment ?: "unknown"
-        }
-        return result
+        return uri.lastPathSegment ?: "unknown"
     }
 
     /**

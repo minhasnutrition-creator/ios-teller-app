@@ -60,6 +60,7 @@ open class PdfPCell(val phrase: Phrase = Phrase()) {
 }
 
 open class PdfPTable(val numColumns: Int) {
+    constructor(relativeWidths: FloatArray) : this(relativeWidths.size)
     var widthPercentage: Float = 100f
     var spacingBefore: Float = 0f
     var spacingAfter: Float = 0f

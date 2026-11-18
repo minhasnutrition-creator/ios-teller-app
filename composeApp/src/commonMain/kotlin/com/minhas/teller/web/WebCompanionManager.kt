@@ -8,8 +8,15 @@ import kotlinx.coroutines.flow.asStateFlow
 data class PairRequest(
     val id: String = "",
     val clientName: String = "Desktop Companion",
-    val clientIp: String = "127.0.0.1"
+    val clientIp: String = "127.0.0.1",
+    val device: String = "Desktop Companion",
+    val ip: String = "127.0.0.1",
+    val code: String = "123456"
 )
+
+object CompanionAuth {
+    fun getOrCreateToken(context: Context): String = "ios-token"
+}
 
 /**
  * Web companion and desktop pairing manager for iOS.
@@ -41,6 +48,10 @@ object WebCompanionManager {
 
     fun getLocalIpAddress(context: Context): String = "127.0.0.1"
     fun pruneExpiredPairs() {}
+    fun updateServerState(active: Boolean = false, ip: String = "", port: Int = 8080, token: String = "") {
+        _isServerRunning.value = active
+        _serverPort.value = port
+    }
     fun updateServerState(active: Boolean = false, port: Int = 8080) {
         _isServerRunning.value = active
         _serverPort.value = port
@@ -54,7 +65,7 @@ object WebCompanionManager {
         _isServerRunning.value = false
     }
 
-    fun publishPairing(sessionId: String, context: Context) {}
+    fun publishPairing(sessionId: String, context: Context): Boolean = true
     fun setTrackpadActive(active: Boolean) {}
     fun isKeyboardRequested(): Boolean = false
     fun denyPair(id: String) { _pendingPair.value = null }

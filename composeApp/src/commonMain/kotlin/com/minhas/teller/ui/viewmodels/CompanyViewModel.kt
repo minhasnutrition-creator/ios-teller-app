@@ -108,7 +108,7 @@ class CompanyViewModelFactory(
     private val ledgerRepository: LedgerRepository? = null,
     private val accountGroupRepository: AccountGroupRepository? = null
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
         if (modelClass.isAssignableFrom(CompanyViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return CompanyViewModel(repository, ledgerRepository, accountGroupRepository) as T

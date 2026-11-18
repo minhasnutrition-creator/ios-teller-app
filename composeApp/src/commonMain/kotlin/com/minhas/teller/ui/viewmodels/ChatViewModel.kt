@@ -2465,7 +2465,7 @@ class ChatViewModelFactory(
     private val unitDao: UnitDao,
     private val chatMessageDao: ChatMessageDao
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
         if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ChatViewModel(appContext, voucherRepository, ledgerRepository, stockItemDao, unitDao, chatMessageDao) as T

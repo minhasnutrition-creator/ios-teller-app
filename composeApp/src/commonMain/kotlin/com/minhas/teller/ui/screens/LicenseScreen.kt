@@ -288,10 +288,13 @@ fun LicenseScreen(navController: NavController, reason: String? = null) {
                 var price = if (productsLoadTimedOut) TerminologyManager.getTerm("Unavailable") else TerminologyManager.getTerm("Loading...")
 
                 if (details != null) {
-                    price = if (details.productType == com.android.billingclient.api.BillingClient.ProductType.SUBS) {
-                        details.subscriptionOfferDetails?.firstOrNull()?.pricingPhases?.pricingPhaseList?.firstOrNull()?.formattedPrice ?: TerminologyManager.getTerm("Unknown")
-                    } else {
-                        details.oneTimePurchaseOfferDetails?.formattedPrice ?: TerminologyManager.getTerm("Unknown")
+                    price = details.toString()
+                } else {
+                    price = when (id) {
+                        PlayBillingManager.SUBS_MONTHLY -> "₹499 / mo"
+                        PlayBillingManager.SUBS_YEARLY -> "₹3,999 / yr"
+                        PlayBillingManager.INAPP_LIFETIME -> "₹9,999 once"
+                        else -> TerminologyManager.getTerm("Available on App Store")
                     }
                 }
 

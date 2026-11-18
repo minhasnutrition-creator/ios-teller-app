@@ -42,3 +42,8 @@ class FirebaseDatabase private constructor() {
     val reference: DatabaseReference get() = getReference()
     fun getReference(path: String = ""): DatabaseReference = DatabaseReference()
 }
+
+object ServerValue {
+    val TIMESTAMP: Map<String, String> = mapOf(".sv" to "timestamp")
+}
+

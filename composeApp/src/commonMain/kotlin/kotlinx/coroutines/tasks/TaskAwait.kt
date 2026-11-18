@@ -2,4 +2,5 @@ package kotlinx.coroutines.tasks
 
 import com.google.android.gms.tasks.Task
 
-suspend fun <T> Task<T>.await(): T? = getResult()
+@Suppress("UNCHECKED_CAST")
+suspend fun <T> Task<T>.await(): T = (getResult() ?: com.google.firebase.database.DataSnapshot()) as T

@@ -135,6 +135,7 @@ import com.minhas.teller.SessionManager
 import com.minhas.teller.data.AppDatabase
 
 import com.minhas.teller.data.entities.*
+import kotlin.Unit
 
 import com.minhas.teller.data.repositories.CompanyRepository
 
@@ -3464,9 +3465,9 @@ private fun Modifier.innerShadow(
         }
         val frameworkPaint = paint.asFrameworkPaint()
         if (blur.toPx() > 0) {
-            frameworkPaint.maskFilter = android.graphics.BlurMaskFilter(
-                blur.toPx(),
-                android.graphics.BlurMaskFilter.Blur.NORMAL
+            frameworkPaint.maskFilter = org.jetbrains.skia.MaskFilter.makeBlur(
+                org.jetbrains.skia.FilterBlurMode.NORMAL,
+                blur.toPx()
             )
         }
         canvas.save()
@@ -3493,9 +3494,9 @@ private fun Modifier.neumorphicShadow(
         }
         val frameworkPaintDark = paintDark.asFrameworkPaint()
         if (blurPx > 0) {
-            frameworkPaintDark.maskFilter = android.graphics.BlurMaskFilter(
-                blurPx,
-                android.graphics.BlurMaskFilter.Blur.NORMAL
+            frameworkPaintDark.maskFilter = org.jetbrains.skia.MaskFilter.makeBlur(
+                org.jetbrains.skia.FilterBlurMode.NORMAL,
+                blurPx
             )
         }
         
@@ -3505,9 +3506,9 @@ private fun Modifier.neumorphicShadow(
         }
         val frameworkPaintLight = paintLight.asFrameworkPaint()
         if (blurPx > 0) {
-            frameworkPaintLight.maskFilter = android.graphics.BlurMaskFilter(
-                blurPx,
-                android.graphics.BlurMaskFilter.Blur.NORMAL
+            frameworkPaintLight.maskFilter = org.jetbrains.skia.MaskFilter.makeBlur(
+                org.jetbrains.skia.FilterBlurMode.NORMAL,
+                blurPx
             )
         }
         

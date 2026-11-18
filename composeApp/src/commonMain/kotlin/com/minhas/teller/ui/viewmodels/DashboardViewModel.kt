@@ -418,7 +418,7 @@ class DashboardViewModelFactory(
     private val ledgerRepository: LedgerRepository,
     private val stockItemDao: StockItemDao
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return DashboardViewModel(repository, ledgerRepository, stockItemDao) as T

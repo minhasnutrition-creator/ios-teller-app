@@ -26,15 +26,21 @@ open class File {
 
     fun exists(): Boolean = false
     fun isFile(): Boolean = true
+    val isFile: Boolean get() = isFile()
     fun isDirectory(): Boolean = false
+    val isDirectory: Boolean get() = isDirectory()
     fun length(): Long = 0L
     fun createNewFile(): Boolean = true
     fun mkdirs(): Boolean = true
     fun mkdir(): Boolean = true
     fun delete(): Boolean = true
     fun deleteOnExit() {}
+    fun renameTo(dest: File): Boolean = true
     fun listFiles(): Array<File>? = emptyArray()
     fun list(): Array<String>? = emptyArray()
+
+    val extension: String get() = name.substringAfterLast('.', "")
+    val nameWithoutExtension: String get() = name.substringBeforeLast('.')
 
     fun readBytes(): ByteArray = ByteArray(0)
     fun writeBytes(bytes: ByteArray) {}
@@ -153,6 +159,8 @@ class PrintWriter(val out: Any?) : Closeable {
 class FileWriter(val file: File, val append: Boolean = false) : Closeable {
     constructor(path: String, append: Boolean = false) : this(File(path), append)
     fun write(text: String) {}
+    fun append(csq: CharSequence?): FileWriter { write(csq?.toString() ?: "null"); return this }
+    fun append(c: Char): FileWriter { write(c.toString()); return this }
     fun flush() {}
     override fun close() {}
 }
