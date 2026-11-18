@@ -317,8 +317,8 @@ class AiAuditorViewModel(
                     projectedCash90d = max(0.0, totalLiquidity - (dailyBurnRate * 90))
                 )
 
-                val deductions: Int = findings.sumOf { finding ->
-                    when (finding.severity) {
+                val deductions: Int = findings.fold(0) { acc, finding ->
+                    acc + when (finding.severity) {
                         Severity.HIGH -> 15
                         Severity.MEDIUM -> 8
                         Severity.LOW -> 3

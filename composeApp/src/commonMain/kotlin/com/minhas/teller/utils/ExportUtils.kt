@@ -2175,7 +2175,7 @@ object ExportUtils {
         }
 
         val activity = context.findActivity() ?: (context as? Activity)
-        val targetContext = activity ?: context
+        val targetContext: Context = activity ?: context
 
         val printManager = try {
             targetContext.getSystemService(Context.PRINT_SERVICE) as? android.print.PrintManager
