@@ -201,7 +201,7 @@ object HsnFuzzyMatcher {
         val vocabByFirstChar: Map<Char, List<VocabWord>>,
         val skeletonToVocab: Map<String, List<String>>,
         val tokenToEntryIndices: Map<String, IntArray>,
-        val fuzzyMemo: ConcurrentHashMap<String, List<MatchedVocabToken>> = ConcurrentHashMap(512)
+        val fuzzyMemo: ConcurrentHashMap<String, List<MatchedVocabToken>> = ConcurrentHashMap<String, List<MatchedVocabToken>>(512)
     )
 
     private fun charMask(s: String): Int {
