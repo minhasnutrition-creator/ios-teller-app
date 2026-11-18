@@ -42,7 +42,6 @@ interface Context {
     fun getFilesDir(): File = filesDir
     fun getCacheDir(): File = cacheDir
     val resources: Any? get() = null
-    fun findActivity(): Any? = null
     val packageManager: android.content.pm.PackageManager get() = android.content.pm.PackageManager
 
     companion object {
