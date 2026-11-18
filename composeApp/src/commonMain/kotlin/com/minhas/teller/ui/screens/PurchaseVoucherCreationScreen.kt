@@ -1508,7 +1508,7 @@ fun PurchaseVoucherCreationScreen(
                          .fillMaxWidth()
                          .padding(horizontal = 16.dp, vertical = 12.dp)
                          .height(54.dp)
-                         .neumorphicShadow(
+                         .neumorphicShadowPvc(
                              shape = RoundedCornerShape(27.dp),
                              darkShadowColor = Color(0xFFA3B1C6).copy(alpha = 0.6f),
                              lightShadowColor = Color(0xFFFFFFFF),
@@ -1834,7 +1834,7 @@ fun PurchaseVoucherCreationScreen(
                              Box(
                                  modifier = Modifier
                                      .weight(1f)
-                                     .neumorphicShadow(RoundedCornerShape(24.dp))
+                                     .neumorphicShadowPvc(RoundedCornerShape(24.dp))
                                      .background(Color(0xFFE0E5EC), RoundedCornerShape(24.dp))
                                      .padding(horizontal = 12.dp, vertical = 8.dp)
                              ) {
@@ -1843,7 +1843,7 @@ fun PurchaseVoucherCreationScreen(
                                      Box(
                                          modifier = Modifier
                                              .size(36.dp)
-                                             .neumorphicShadow(CircleShape, darkShadowColor = Color(0xFF4CAF50).copy(alpha = 0.5f), blur = 4.dp, offset = 3.dp)
+                                             .neumorphicShadowPvc(CircleShape, darkShadowColor = Color(0xFF4CAF50).copy(alpha = 0.5f), blur = 4.dp, offset = 3.dp)
                                              .background(Color(0xFFE0E5EC), CircleShape),
                                          contentAlignment = Alignment.Center
                                      ) {
@@ -1883,7 +1883,7 @@ fun PurchaseVoucherCreationScreen(
                              Box(
                                  modifier = Modifier
                                      .weight(1f)
-                                     .neumorphicShadow(RoundedCornerShape(24.dp))
+                                     .neumorphicShadowPvc(RoundedCornerShape(24.dp))
                                      .background(Color(0xFFE0E5EC), RoundedCornerShape(24.dp))
                                      .padding(horizontal = 12.dp, vertical = 8.dp)
                              ) {
@@ -1916,7 +1916,7 @@ fun PurchaseVoucherCreationScreen(
                                      Box(
                                          modifier = Modifier
                                              .size(36.dp)
-                                             .neumorphicShadow(CircleShape, darkShadowColor = Color(0xFFF44336).copy(alpha = 0.5f), blur = 4.dp, offset = 3.dp)
+                                             .neumorphicShadowPvc(CircleShape, darkShadowColor = Color(0xFFF44336).copy(alpha = 0.5f), blur = 4.dp, offset = 3.dp)
                                              .background(Color(0xFFE0E5EC), CircleShape),
                                          contentAlignment = Alignment.Center
                                      ) {
@@ -1947,7 +1947,7 @@ fun PurchaseVoucherCreationScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(50.dp)
-                                .floatingDropShadow(borderRadius = 25.dp)
+                                .floatingDropShadowPvc(borderRadius = 25.dp)
                                 .clip(RoundedCornerShape(25.dp))
                                 .background(Color.White.copy(alpha = 0.90f))
                                 .border(1.5.dp, Color(0xFF0EA5E9).copy(alpha = 0.55f), RoundedCornerShape(25.dp))
@@ -1979,7 +1979,7 @@ fun PurchaseVoucherCreationScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(50.dp)
-                                .floatingDropShadow(borderRadius = 25.dp)
+                                .floatingDropShadowPvc(borderRadius = 25.dp)
                                 .clip(RoundedCornerShape(25.dp))
                                 .background(Color.White.copy(alpha = 0.90f))
                                 .border(1.5.dp, Color(0xFFAB47BC).copy(alpha = 0.55f), RoundedCornerShape(27.dp))
@@ -3306,7 +3306,7 @@ private fun Modifier.drawCircuitTraces(): Modifier = this.drawWithContent {
 
 // Custom modifier to draw a soft feathered drop shadow to simulate a floating element
 
-private fun Modifier.floatingDropShadow(borderRadius: androidx.compose.ui.unit.Dp = 23.dp): Modifier = this.drawBehind {
+private fun Modifier.floatingDropShadowPvc(borderRadius: androidx.compose.ui.unit.Dp = 23.dp): Modifier = this.drawBehind {
 
     val shadowColor = Color.Black.copy(alpha = 0.14f)
 
@@ -3477,7 +3477,7 @@ private fun Modifier.innerShadow(
     }
 }
 
-private fun Modifier.neumorphicShadow(
+private fun Modifier.neumorphicShadowPvc(
     shape: androidx.compose.ui.graphics.Shape,
     darkShadowColor: Color = Color(0xFFA3B1C6),
     lightShadowColor: Color = Color(0xFFFFFFFF),
