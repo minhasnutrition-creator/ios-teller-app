@@ -22,7 +22,9 @@ open class Bitmap {
     }
 
     fun setPixel(x: Int, y: Int, color: Int) {}
+    fun setPixels(pixels: IntArray, offset: Int, stride: Int, x: Int, y: Int, width: Int, height: Int) {}
     fun getPixel(x: Int, y: Int): Int = 0
+    fun eraseColor(color: Int) {}
     fun recycle() {}
 
     companion object {
@@ -72,6 +74,7 @@ class BlurMaskFilter(val radius: Float, val style: Blur) {
 
 class Paint {
     var color: Int = 0
+    var alpha: Int = 255
     var strokeWidth: Float = 1f
     var isAntiAlias: Boolean = true
     var style: Style = Style.FILL
@@ -89,7 +92,12 @@ class Paint {
     enum class Align { LEFT, CENTER, RIGHT }
 
     fun measureText(text: String): Float = text.length * 8f
+    fun setAlpha(a: Int) { alpha = a }
+    fun descent(): Float = 3f
+    fun ascent(): Float = -10f
 }
+
+fun androidx.compose.ui.graphics.NativeCanvas.drawText(text: String, x: Float, y: Float, paint: Any? = null) {}
 
 class Canvas(val bitmap: Bitmap? = null) {
     fun drawColor(color: Int) {}

@@ -37,7 +37,12 @@ class BigDecimal(val value: Double) : Comparable<BigDecimal> {
     fun doubleValue(): Double = value
     fun toInt(): Int = value.toInt()
 
-    override fun compareTo(other: BigDecimal): Int = value.compareTo(other.value)
+    operator fun times(other: BigDecimal): BigDecimal = multiply(other)
+    operator fun div(other: BigDecimal): BigDecimal = divide(other)
+    operator fun plus(other: BigDecimal): BigDecimal = add(other)
+    operator fun minus(other: BigDecimal): BigDecimal = subtract(other)
+
+    override operator fun compareTo(other: BigDecimal): Int = value.compareTo(other.value)
     override fun toString(): String = value.toString()
     override fun equals(other: Any?): Boolean = other is BigDecimal && other.value == value
     override fun hashCode(): Int = value.hashCode()

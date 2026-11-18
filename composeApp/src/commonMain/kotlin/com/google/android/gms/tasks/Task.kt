@@ -7,3 +7,8 @@ class Task<T> {
     fun isSuccessful(): Boolean = true
     fun getResult(): T? = null
 }
+
+suspend fun <T> Task<T>.await(): T {
+    @Suppress("UNCHECKED_CAST")
+    return getResult() ?: (com.google.firebase.database.DataSnapshot() as? T) ?: (null as T)
+}

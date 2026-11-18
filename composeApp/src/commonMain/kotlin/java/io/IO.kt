@@ -40,27 +40,41 @@ open class File {
     fun writeBytes(bytes: ByteArray) {}
     fun readText(charset: Any? = null): String = ""
     fun writeText(text: String, charset: Any? = null) {}
+    fun copyTo(target: File, overwrite: Boolean = false): File = target
+    fun copyRecursively(target: File, overwrite: Boolean = false): Boolean = true
+    fun deleteRecursively(): Boolean = true
 
     override fun toString(): String = path
     override fun equals(other: Any?): Boolean = other is File && other.path == path
     override fun hashCode(): Int = path.hashCode()
 }
 
-abstract class InputStream {
+interface Closeable : AutoCloseable {
+    override fun close()
+}
+
+open class Reader : Closeable {
+    override fun close() {}
+}
+
+abstract class InputStream : Closeable {
     open fun read(): Int = -1
     open fun read(b: ByteArray): Int = read(b, 0, b.size)
     open fun read(b: ByteArray, off: Int, len: Int): Int = -1
     open fun skip(n: Long): Long = 0
     open fun available(): Int = 0
-    open fun close() {}
+    override fun close() {}
+    fun readBytes(): ByteArray = ByteArray(0)
+    fun bufferedReader(charset: Any? = null): BufferedReader = BufferedReader(this)
+    fun copyTo(out: OutputStream, bufferSize: Int = 8192): Long = 0L
 }
 
-abstract class OutputStream {
+abstract class OutputStream : Closeable {
     open fun write(b: Int) {}
     open fun write(b: ByteArray) { write(b, 0, b.size) }
     open fun write(b: ByteArray, off: Int, len: Int) {}
     open fun flush() {}
-    open fun close() {}
+    override fun close() {}
 }
 
 class ByteArrayInputStream(private val buf: ByteArray) : InputStream() {
@@ -115,47 +129,30 @@ open class FileOutputStream(val file: File, val append: Boolean = false) : Outpu
     constructor(path: String, append: Boolean = false) : this(File(path), append)
 }
 
-class InputStreamReader(val inputStream: InputStream, val charset: Any? = "UTF-8") {
-    fun close() { inputStream.close() }
+class InputStreamReader(val inputStream: InputStream, val charset: Any? = "UTF-8") : Reader() {
+    override fun close() { inputStream.close() }
 }
 
-class BufferedReader(val reader: Any?) {
+class BufferedReader(val reader: Any?) : Reader() {
     fun readLine(): String? = null
     fun readLines(): List<String> = emptyList()
     fun readText(): String = ""
-    fun close() {}
+    fun <T> useLines(block: (Sequence<String>) -> T): T = block(emptySequence())
+    override fun close() {}
 }
 
 class FileReader(val file: File) : InputStream()
 
-class PrintWriter(val out: Any?) {
+class PrintWriter(val out: Any?) : Closeable {
     fun print(s: Any?) {}
     fun println(s: Any? = "") {}
     fun flush() {}
-    fun close() {}
+    override fun close() {}
 }
 
-class FileWriter(val file: File, val append: Boolean = false) {
+class FileWriter(val file: File, val append: Boolean = false) : Closeable {
     constructor(path: String, append: Boolean = false) : this(File(path), append)
     fun write(text: String) {}
     fun flush() {}
-    fun close() {}
-}
-
-fun InputStream.readBytes(): ByteArray = ByteArray(0)
-fun InputStream.bufferedReader(): BufferedReader = BufferedReader(this)
-
-inline fun <T, R> T.use(block: (T) -> R): R {
-    try {
-        return block(this)
-    } finally {
-        when (this) {
-            is InputStream -> this.close()
-            is OutputStream -> this.close()
-            is BufferedReader -> this.close()
-            is InputStreamReader -> this.close()
-            is FileWriter -> this.close()
-            is PrintWriter -> this.close()
-        }
-    }
+    override fun close() {}
 }

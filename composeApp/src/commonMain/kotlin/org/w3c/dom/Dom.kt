@@ -2,7 +2,7 @@ package org.w3c.dom
 
 interface NodeList {
     val length: Int get() = 0
-    fun item(index: Int): Node? = null
+    fun item(index: Int): Node = object : Node {}
 }
 
 interface Node {

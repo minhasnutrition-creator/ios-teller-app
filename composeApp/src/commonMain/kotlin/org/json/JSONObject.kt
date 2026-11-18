@@ -53,6 +53,8 @@ class JSONObject {
     fun getBoolean(key: String): Boolean = map[key]?.toString()?.equals("true", ignoreCase = true) ?: throw JSONException("No value for $key")
     fun isNull(key: String): Boolean = map[key] == null || map[key] === NULL
 
+    fun toString(indentSpaces: Int): String = toString()
+
     override fun toString(): String {
         val sb = StringBuilder("{")
         var first = true
@@ -87,6 +89,10 @@ class JSONArray {
 
     constructor()
 
+    constructor(collection: Collection<*>) {
+        list.addAll(collection)
+    }
+
     constructor(source: String) {
         // Minimal shim - list stays empty for complex parses
     }
@@ -101,11 +107,13 @@ class JSONArray {
     fun getJSONObject(index: Int): JSONObject = list[index] as? JSONObject ?: JSONObject()
     fun getJSONArray(index: Int): JSONArray = list[index] as? JSONArray ?: JSONArray()
     fun optJSONObject(index: Int): JSONObject? = list.getOrNull(index) as? JSONObject
-    fun optString(index: Int): String = list.getOrNull(index)?.toString() ?: ""
+    fun optString(index: Int, fallback: String = ""): String = list.getOrNull(index)?.toString() ?: fallback
     fun optDouble(index: Int, fallback: Double = 0.0): Double = list.getOrNull(index)?.toString()?.toDoubleOrNull() ?: fallback
     fun optLong(index: Int, fallback: Long = 0L): Long = list.getOrNull(index)?.toString()?.toLongOrNull() ?: fallback
     fun length(): Int = list.size
     fun isNull(index: Int): Boolean = list.getOrNull(index) == null
+
+    fun toString(indentSpaces: Int): String = toString()
 
     override fun toString(): String {
         val sb = StringBuilder("[")

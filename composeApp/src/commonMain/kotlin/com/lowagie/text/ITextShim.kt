@@ -79,6 +79,9 @@ open class Paragraph(val text: String = "", val font: Font = Font()) {
     var multiAnalyzed: Boolean = false
     fun add(element: Any): Boolean = true
     fun setAlignment(align: Int) { alignment = align }
+    fun setSpacingBefore(spacing: Float) { spacingBefore = spacing }
+    fun setSpacingAfter(spacing: Float) { spacingAfter = spacing }
+    fun setLeading(lead: Float) { leading = lead }
 }
 
 open class Image {

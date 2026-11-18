@@ -6,7 +6,7 @@ class Date(var time: Long = com.minhas.teller.currentTimeMillis()) : Comparable<
         time = t
     }
 
-    override fun compareTo(other: Date): Int = time.compareTo(other.time)
+    override operator fun compareTo(other: Date): Int = time.compareTo(other.time)
     fun after(whenDate: Date): Boolean = time > whenDate.time
     fun before(whenDate: Date): Boolean = time < whenDate.time
 

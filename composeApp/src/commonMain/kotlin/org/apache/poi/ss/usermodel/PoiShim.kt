@@ -40,7 +40,9 @@ enum class FillPatternType {
 }
 
 object IndexedColors {
-    class ColorIndex(val index: Short)
+    class ColorIndex(val index: Short) {
+        fun getIndex(): Short = index
+    }
     val GREY_25_PERCENT = ColorIndex(0x16)
     val BLACK = ColorIndex(0x08)
     val WHITE = ColorIndex(0x09)
@@ -53,6 +55,15 @@ open class Font {
     var fontHeightInPoints: Short = 11
     var fontName: String = "Calibri"
     var color: Short = 0
+
+    fun setBold(b: Boolean) { bold = b }
+    fun setFontHeightInPoints(h: Short) { fontHeightInPoints = h }
+    fun setFontName(name: String) { fontName = name }
+    fun setColor(c: Short) { color = c }
+}
+
+open class DataFormat {
+    fun getFormat(format: String): Short = 0
 }
 
 open class CellStyle {
@@ -67,6 +78,15 @@ open class CellStyle {
     var dataFormat: Short = 0
 
     fun setFont(font: Font) {}
+    fun setAlignment(align: HorizontalAlignment) { alignment = align }
+    fun setVerticalAlignment(align: VerticalAlignment) { verticalAlignment = align }
+    fun setFillForegroundColor(color: Short) { fillForegroundColor = color }
+    fun setFillPattern(pattern: FillPatternType) { fillPattern = pattern }
+    fun setBorderTop(b: Short) { borderTop = b }
+    fun setBorderBottom(b: Short) { borderBottom = b }
+    fun setBorderLeft(b: Short) { borderLeft = b }
+    fun setBorderRight(b: Short) { borderRight = b }
+    fun setDataFormat(df: Short) { dataFormat = df }
 }
 
 open class Cell(val rowIndex: Int = 0, val columnIndex: Int = 0) {
@@ -76,6 +96,8 @@ open class Cell(val rowIndex: Int = 0, val columnIndex: Int = 0) {
     var booleanCellValue: Boolean = false
     var dateCellValue: Date? = null
     var cellStyle: CellStyle = CellStyle()
+
+    fun setCellStyle(style: CellStyle) { cellStyle = style }
 
     fun setCellValue(value: String) {
         stringCellValue = value
@@ -119,6 +141,9 @@ open class Sheet(val sheetName: String = "") : Iterable<Row> {
     fun getRow(index: Int): Row? = rows[index]
     fun createRow(index: Int): Row = rows.getOrPut(index) { Row(index) }
 
+    fun setColumnWidth(col: Int, width: Int) {}
+    fun autoSizeColumn(col: Int) {}
+
     override fun iterator(): Iterator<Row> = rows.values.iterator()
 }
 
@@ -138,6 +163,7 @@ open class Workbook : Iterable<Sheet> {
 
     fun createCellStyle(): CellStyle = CellStyle()
     fun createFont(): Font = Font()
+    fun createDataFormat(): DataFormat = DataFormat()
 
     fun write(out: OutputStream) {}
     fun close() {}

@@ -1,7 +1,7 @@
 package java.util
 
 class UUID(val mostSigBits: Long, val leastSigBits: Long) : Comparable<UUID> {
-    override fun compareTo(other: UUID): Int {
+    override operator fun compareTo(other: UUID): Int {
         val c = mostSigBits.compareTo(other.mostSigBits)
         return if (c != 0) c else leastSigBits.compareTo(other.leastSigBits)
     }

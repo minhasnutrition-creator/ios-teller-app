@@ -40,6 +40,21 @@ open class PdfPCell(val phrase: Phrase = Phrase()) {
         paddingRight = p
     }
 
+    fun setPaddingTop(p: Float) { paddingTop = p }
+    fun setPaddingBottom(p: Float) { paddingBottom = p }
+    fun setPaddingLeft(p: Float) { paddingLeft = p }
+    fun setPaddingRight(p: Float) { paddingRight = p }
+    fun setBorder(b: Int) { border = b }
+    fun setBorderWidth(w: Float) { borderWidth = w }
+    fun setBorderColor(c: Any?) { borderColor = c }
+    fun setBackgroundColor(c: Any?) { backgroundColor = c }
+    fun setHorizontalAlignment(a: Int) { horizontalAlignment = a }
+    fun setVerticalAlignment(a: Int) { verticalAlignment = a }
+    fun setColspan(c: Int) { colspan = c }
+    fun setRowspan(r: Int) { rowspan = r }
+    fun setFixedHeight(h: Float) { fixedHeight = h }
+    fun setMinimumHeight(h: Float) { minimumHeight = h }
+
     fun addElement(element: Any) {}
 }
 
@@ -49,6 +64,11 @@ open class PdfPTable(val numColumns: Int) {
     var spacingAfter: Float = 0f
     var horizontalAlignment: Int = Element.ALIGN_CENTER
     val defaultCell: PdfPCell = PdfPCell()
+
+    fun setSpacingBefore(s: Float) { spacingBefore = s }
+    fun setSpacingAfter(s: Float) { spacingAfter = s }
+    fun setWidthPercentage(w: Float) { widthPercentage = w }
+    fun setHorizontalAlignment(a: Int) { horizontalAlignment = a }
 
     fun setWidths(widths: FloatArray) {}
     fun setWidths(widths: IntArray) {}
@@ -67,6 +87,13 @@ open class PdfContentByte {
     fun rectangle(x: Float, y: Float, w: Float, h: Float) {}
     fun fill() {}
     fun stroke() {}
+    fun setShadingFill(pattern: Any?) {}
+    fun paintShading(shading: Any?) {}
+    fun setFontAndSize(font: Any?, size: Float) {}
+    fun showText(text: String) {}
+    fun beginText() {}
+    fun endText() {}
+    fun setTextMatrix(x: Float, y: Float) {}
 }
 
 open class PdfWriter {
@@ -76,9 +103,21 @@ open class PdfWriter {
 
     var pageEvent: Any? = null
     val directContent: PdfContentByte = PdfContentByte()
+    val directContentUnder: PdfContentByte = PdfContentByte()
     fun close() {}
 }
 
-open class PdfPageEventHelper
-class PdfShading
+open class PdfPageEventHelper {
+    open fun onStartPage(writer: PdfWriter, document: Document) {}
+    open fun onEndPage(writer: PdfWriter, document: Document) {}
+    open fun onCloseDocument(writer: PdfWriter, document: Document) {}
+    open fun onOpenDocument(writer: PdfWriter, document: Document) {}
+}
+
+open class PdfShading {
+    companion object {
+        fun simpleAxial(writer: PdfWriter, x0: Float, y0: Float, x1: Float, y1: Float, startColor: Any?, endColor: Any?): PdfShading = PdfShading()
+    }
+}
+
 class PdfShadingPattern(val shading: PdfShading? = null)

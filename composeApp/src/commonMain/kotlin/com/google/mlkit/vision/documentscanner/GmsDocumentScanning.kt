@@ -3,6 +3,11 @@ package com.google.mlkit.vision.documentscanner
 import android.net.Uri
 import com.google.android.gms.tasks.Task
 
+const val RESULT_FORMAT_JPEG = 101
+const val RESULT_FORMAT_PDF = 102
+const val SCANNER_MODE_FULL = 1
+const val SCANNER_MODE_BASE = 2
+
 class GmsDocumentScanningResult(val pages: List<Page> = emptyList()) {
     class Page(val imageUri: Uri = Uri.parse(""))
 

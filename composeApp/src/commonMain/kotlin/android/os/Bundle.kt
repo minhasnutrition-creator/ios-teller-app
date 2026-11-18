@@ -28,9 +28,4 @@ open class CancellationSignal {
     fun cancel() {}
 }
 
-open class ParcelFileDescriptor {
-    val fileDescriptor: Any? = null
-    fun close() {}
 
-    open class AutoCloseOutputStream(val pfd: ParcelFileDescriptor) : java.io.OutputStream()
-}

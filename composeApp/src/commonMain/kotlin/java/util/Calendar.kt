@@ -2,6 +2,8 @@ package java.util
 
 class Calendar(var timeInMillis: Long = com.minhas.teller.currentTimeMillis()) {
     fun clone(): Calendar = Calendar(timeInMillis)
+    fun clear() { timeInMillis = 0L }
+    fun clear(field: Int) {}
     var time: Date
         get() = Date(timeInMillis)
         set(value) {

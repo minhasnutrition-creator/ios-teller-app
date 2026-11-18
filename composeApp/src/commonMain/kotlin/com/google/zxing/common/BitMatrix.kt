@@ -1,5 +1,5 @@
 package com.google.zxing.common
 
 open class BitMatrix(val width: Int = 100, val height: Int = 100) {
-    fun get(x: Int, y: Int): Boolean = false
+    operator fun get(x: Int, y: Int): Boolean = false
 }

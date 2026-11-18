@@ -16,8 +16,8 @@ object GemmaLLM {
 
     suspend fun suggestVoucher(
         prompt: String,
-        ledgers: List<String>,
-        stockItems: List<String>
+        ledgers: List<String> = emptyList(),
+        stockItems: List<String> = emptyList()
     ): String? = null
 
     suspend fun answerGstQuestion(question: String, context: String): String? = null

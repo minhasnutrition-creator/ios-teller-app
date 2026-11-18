@@ -179,7 +179,7 @@ fun ReceiptGraphic(modifier: Modifier = Modifier) {
             textSize = badgeRadius * 1.1f
             typeface = android.graphics.Typeface.DEFAULT_BOLD
             textAlign = android.graphics.Paint.Align.CENTER
-            alpha = (0.65f * 255).toInt()
+            setAlpha((0.65f * 255).toInt())
         }
         
         drawContext.canvas.nativeCanvas.drawText(
@@ -973,24 +973,10 @@ private fun Modifier.neumorphicShadow(
             color = darkShadowColor
             isAntiAlias = true
         }
-        val frameworkPaintDark = paintDark.asFrameworkPaint()
-        if (blurPx > 0) {
-            frameworkPaintDark.maskFilter = android.graphics.BlurMaskFilter(
-                blurPx,
-                android.graphics.BlurMaskFilter.Blur.NORMAL
-            )
-        }
         
         val paintLight = Paint().apply {
             color = lightShadowColor
             isAntiAlias = true
-        }
-        val frameworkPaintLight = paintLight.asFrameworkPaint()
-        if (blurPx > 0) {
-            frameworkPaintLight.maskFilter = android.graphics.BlurMaskFilter(
-                blurPx,
-                android.graphics.BlurMaskFilter.Blur.NORMAL
-            )
         }
         
         val outline = shape.createOutline(size, layoutDirection, this)

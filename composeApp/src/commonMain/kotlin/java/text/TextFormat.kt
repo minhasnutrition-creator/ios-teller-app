@@ -5,7 +5,13 @@ import java.util.Date
 import java.util.Locale
 
 class SimpleDateFormat(private val pattern: String, val locale: Locale = Locale.getDefault()) {
-    fun format(date: Date): String = format(date.time)
+    fun format(date: Date?): String = if (date != null) format(date.time) else ""
+    fun format(obj: Any?): String = when (obj) {
+        is Date -> format(obj.time)
+        is Number -> format(obj.toLong())
+        null -> ""
+        else -> obj.toString()
+    }
 
     fun format(timeMs: Long): String {
         val cal = Calendar.getInstance().apply { timeInMillis = timeMs }

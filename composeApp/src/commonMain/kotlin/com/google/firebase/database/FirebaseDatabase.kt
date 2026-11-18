@@ -24,6 +24,7 @@ class DatabaseReference {
     val key: String? = null
 
     fun child(path: String): DatabaseReference = this
+    fun get(): com.google.android.gms.tasks.Task<DataSnapshot> = com.google.android.gms.tasks.Task()
     fun setValue(value: Any?): Any? = null
     fun removeValue(): Any? = null
     fun updateChildren(update: Map<String, Any?>): Any? = null

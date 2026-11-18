@@ -1890,9 +1890,10 @@ object VoucherExcelImporter {
                 val explicitGst = optDouble(row, headers, "GSTRate")
                 val taxRes = resolveHsnAndTax(itemName, currentCat, explicitHsn, explicitGst, context, companyId)
                 if (taxRes != null) {
-                    if (explicitHsn.isNullOrBlank() && !taxRes.first.isNullOrBlank()) {
+                    val hsnVal = taxRes.first
+                    if (explicitHsn.isNullOrBlank() && !hsnVal.isNullOrBlank()) {
                         val hsnCell = row.getCell(hsnColIdx) ?: row.createCell(hsnColIdx)
-                        hsnCell.setCellValue(taxRes.first)
+                        hsnCell.setCellValue(hsnVal)
                     }
                     if (explicitGst == null || explicitGst == 0.0) {
                         val gstCell = row.getCell(gstColIdx) ?: row.createCell(gstColIdx)

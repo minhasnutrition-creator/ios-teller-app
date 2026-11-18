@@ -124,15 +124,6 @@ fun formatDouble(d: Double, precision: Int): String {
     return sb.toString()
 }
 
-// Extension methods on String companion & instances
-fun String.Companion.format(format: String, vararg args: Any?): String = simpleFormat(format, args)
-fun String.Companion.format(locale: Any?, format: String, vararg args: Any?): String = simpleFormat(format, args)
-fun String.format(vararg args: Any?): String = simpleFormat(this, args)
-fun String.format(locale: Any?, vararg args: Any?): String = simpleFormat(this, args)
-
-fun String.lowercase(locale: Any?): String = this.lowercase()
-fun String.uppercase(locale: Any?): String = this.uppercase()
-
 fun String(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size - offset, charset: Any? = null): String {
     val end = minOf(bytes.size, offset + length)
     return bytes.decodeToString(offset, end, throwOnInvalidSequence = false)
@@ -141,5 +132,3 @@ fun String(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size - offset,
 fun String(bytes: ByteArray, charset: Any?): String {
     return bytes.decodeToString(throwOnInvalidSequence = false)
 }
-
-fun <K, V> Map<K, V>.getOrDefault(key: K, defaultValue: V): V = get(key) ?: defaultValue

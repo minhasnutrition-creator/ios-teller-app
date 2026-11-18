@@ -18,10 +18,10 @@ object StandardCharsets {
 }
 
 object Charsets {
-    val UTF_8 = kotlin.text.Charsets.UTF_8
-    val UTF_16 = kotlin.text.Charsets.UTF_16
-    val UTF_16LE = kotlin.text.Charsets.UTF_16LE
-    val UTF_16BE = kotlin.text.Charsets.UTF_16BE
-    val US_ASCII = kotlin.text.Charsets.US_ASCII
-    val ISO_8859_1 = kotlin.text.Charsets.ISO_8859_1
+    val UTF_8 = StandardCharsets.UTF_8
+    val UTF_16 = StandardCharsets.UTF_16
+    val UTF_16LE = StandardCharsets.UTF_16LE
+    val UTF_16BE = StandardCharsets.UTF_16BE
+    val US_ASCII = StandardCharsets.US_ASCII
+    val ISO_8859_1 = StandardCharsets.ISO_8859_1
 }

@@ -12,6 +12,16 @@ inline fun SharedPreferences.edit(commit: Boolean = false, action: SharedPrefere
     if (commit) editor.commit() else editor.apply()
 }
 
+open class AssetManager {
+    fun open(fileName: String): java.io.InputStream = java.io.ByteArrayInputStream(ByteArray(0))
+    fun list(path: String): Array<String> = emptyArray()
+}
+
+open class ContentResolver {
+    fun openInputStream(uri: Any?): java.io.InputStream? = null
+    fun openOutputStream(uri: Any?): java.io.OutputStream? = null
+}
+
 /**
  * Multiplatform Context interface for iOS target.
  */
@@ -24,11 +34,13 @@ interface Context {
     fun grantUriPermission(toPackage: String?, uri: Any?, modeFlags: Int) {}
     fun checkSelfPermission(permission: String): Int = 0
 
+    val filesDir: File get() = File("Documents")
+    val cacheDir: File get() = File("Cache")
+    val contentResolver: ContentResolver get() = ContentResolver()
+    val assets: AssetManager get() = AssetManager()
     fun getExternalFilesDir(type: String?): File = File("Documents")
-    fun getFilesDir(): File = File("Documents")
-    fun getCacheDir(): File = File("Cache")
-    val contentResolver: Any? get() = null
-    val assets: Any? get() = null
+    fun getFilesDir(): File = filesDir
+    fun getCacheDir(): File = cacheDir
     val resources: Any? get() = null
     fun findActivity(): Any? = null
 
