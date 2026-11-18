@@ -223,7 +223,7 @@ class HSNSyncRepository(
         emit(SyncResult(success = true, message = "Starting sync...", addedCount = 0))
         val fallbackResult = fallbackSync("Offline HSN database (no network sync — see HsnPresetData)")
         emit(fallbackResult)
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.Default)
 
     private suspend fun fallbackSync(note: String): SyncResult {
         var addedCount = 0
@@ -284,7 +284,7 @@ class HSNSyncRepository(
     /**
      * Pre-populate HSN directory with offline presets if empty
      */
-    suspend fun prePopulateOfflinePresets() = kotlinx.coroutines.withContext(Dispatchers.IO) {
+    suspend fun prePopulateOfflinePresets() = kotlinx.coroutines.withContext(Dispatchers.Default) {
         val count = hsnDao.count()
         if (count == 0) {
             val presets = getOfflinePresets()
@@ -383,7 +383,7 @@ class HSNSyncRepository(
      * Refresh tax rates on all stock items after HSN update
      * This updates existing items with new GST rates from the HSN database
      */
-    suspend fun refreshStockItemTaxRates(companyId: Int): Int = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+    suspend fun refreshStockItemTaxRates(companyId: Int): Int = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
         val dao = stockItemDao ?: return@withContext 0
 
         var refreshedCount = 0

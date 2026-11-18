@@ -123,7 +123,7 @@ fun BankReconciliationScreen(navController: NavController) {
             processing = true
             scope.launch {
                 try {
-                    val parsedTxns = withContext(Dispatchers.IO) {
+                    val parsedTxns = withContext(Dispatchers.Default) {
                         context.contentResolver.openInputStream(uri)?.use { stream ->
                             UniversalBankParser.parseCsv(stream)
                         } ?: emptyList()

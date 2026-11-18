@@ -24,7 +24,6 @@ object ExcelExportEngine {
         data: List<List<String>>
     ) {
         val file = File(context.getExternalFilesDir(null), fileName)
-        com.minhas.teller.TellerApp.configureGlobalProperties()
         var workbook: SXSSFWorkbook? = null
         try {
             workbook = SXSSFWorkbook(100) // Keep 100 rows in memory, stream remaining to temp storage

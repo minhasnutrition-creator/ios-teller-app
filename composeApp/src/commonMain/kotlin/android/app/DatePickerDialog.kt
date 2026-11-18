@@ -7,6 +7,8 @@ class DatePickerDialog(
     val month: Int = 0,
     val dayOfMonth: Int = 1
 ) {
+    val datePicker = android.widget.DatePicker()
+
     fun interface OnDateSetListener {
         fun onDateSet(view: Any?, year: Int, month: Int, dayOfMonth: Int)
     }

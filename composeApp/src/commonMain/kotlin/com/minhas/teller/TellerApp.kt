@@ -38,8 +38,8 @@ fun TellerApp() {
         ) {
             AppNavigation(
                 navController = navController,
-                onThemeChanged = { themeIndex ->
-                    currentAppTheme = AppTheme.values().getOrNull(themeIndex) ?: AppTheme.DEFAULT
+                onThemeChanged = { themeIndex: Int ->
+                    currentAppTheme = AppTheme.entries.getOrNull(themeIndex) ?: AppTheme.DEFAULT
                 },
                 currentAppTheme = currentAppTheme,
                 backgroundBrush = backgroundBrush

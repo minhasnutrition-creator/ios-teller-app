@@ -71,7 +71,7 @@ class SmartTaxService(private val context: Context) {
      * Find best matching HSN and tax info for an item name
      * Supports Hindi/Hinglish item names - automatically translates to English
      */
-    suspend fun getTaxInfoForItem(itemName: String): TaxInfo? = withContext(Dispatchers.IO) {
+    suspend fun getTaxInfoForItem(itemName: String): TaxInfo? = withContext(Dispatchers.Default) {
         // Auto HSN/GST estimation is a per-company feature gated by two settings:
         // the Tax System master switch and Smart Tax Estimation. If either is off
         // for the active company, skip auto-assignment entirely. Manual HSN lookup
@@ -127,7 +127,7 @@ class SmartTaxService(private val context: Context) {
     /**
      * Calculate tax amount for given amount and HSN code
      */
-    suspend fun calculateTax(itemName: String, amount: Double): Pair<Double, TaxInfo?> = withContext(Dispatchers.IO) {
+    suspend fun calculateTax(itemName: String, amount: Double): Pair<Double, TaxInfo?> = withContext(Dispatchers.Default) {
         val taxInfo = getTaxInfoForItem(itemName)
         
         if (taxInfo != null && !taxInfo.isExempted) {
@@ -163,7 +163,7 @@ class SmartTaxService(private val context: Context) {
      * Returns whether there is 1 exact winner, 1 closest fuzzy/reordered match ("Did you mean this?"),
      * 2+ competing closest options ("Is it either one of these?"), or none.
      */
-    suspend fun lookupHsnSuggestions(query: String, maxResults: Int = 5): TaxLookupResult = withContext(Dispatchers.IO) {
+    suspend fun lookupHsnSuggestions(query: String, maxResults: Int = 5): TaxLookupResult = withContext(Dispatchers.Default) {
         val raw = query.trim()
         if (raw.isEmpty()) {
             return@withContext TaxLookupResult(HsnFuzzyMatcher.MatchConfidence.NONE, emptyList())
@@ -194,14 +194,14 @@ class SmartTaxService(private val context: Context) {
      * Uses edit-distance and token-based scoring — ideal for "Did you mean?" prompts
      * when a user types a misspelled or reordered item name.
      */
-    suspend fun searchSuggestions(query: String, maxResults: Int = 5): List<TaxInfo> = withContext(Dispatchers.IO) {
+    suspend fun searchSuggestions(query: String, maxResults: Int = 5): List<TaxInfo> = withContext(Dispatchers.Default) {
         lookupHsnSuggestions(query, maxResults).suggestions.map { it.taxInfo }
     }
 
     /**
      * Search HSN by keyword for manual selection
      */
-    suspend fun searchHSN(query: String): List<HsnEntry> = withContext(Dispatchers.IO) {
+    suspend fun searchHSN(query: String): List<HsnEntry> = withContext(Dispatchers.Default) {
         if (!hasData()) {
             hsnRepository.prePopulateOfflinePresets()
         }
@@ -211,7 +211,7 @@ class SmartTaxService(private val context: Context) {
     /**
      * Get HSN by exact code
      */
-    suspend fun getHSNByCode(code: String): HsnEntry? = withContext(Dispatchers.IO) {
+    suspend fun getHSNByCode(code: String): HsnEntry? = withContext(Dispatchers.Default) {
         if (!hasData()) {
             hsnRepository.prePopulateOfflinePresets()
         }
@@ -221,7 +221,7 @@ class SmartTaxService(private val context: Context) {
     /**
      * Check if HSN database has data
      */
-    suspend fun hasData(): Boolean = withContext(Dispatchers.IO) {
+    suspend fun hasData(): Boolean = withContext(Dispatchers.Default) {
         hsnRepository.getStats().totalCount > 0
     }
     

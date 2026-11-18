@@ -186,7 +186,7 @@ class ChatViewModel(
 
     // Independent scope so a final history save can finish even after the ViewModel is cleared
     // (triggered from DisposableEffect when the user leaves the chat screen).
-    private val persistScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val persistScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -261,7 +261,7 @@ class ChatViewModel(
     /** Refresh the history list with the 10 most recent conversations. */
     fun loadHistory() {
         val companyId = SessionManager.currentCompanyId.value ?: return
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val all = chatMessageDao.getMessagesForCompany(companyId.toLong())
                 val sessions = all
@@ -286,7 +286,7 @@ class ChatViewModel(
 
     /** Reopen a past conversation. */
     fun loadSession(id: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val restored = chatMessageDao.getMessagesBySession(id)
                     .filter { !it.isDeleted && it.text != null }
@@ -357,7 +357,7 @@ class ChatViewModel(
     }
 
     fun checkAndLoadModel() {
-        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.Default) {
             val modelFile = AiModelPrefs.getModelFile(appContext)
             if (!modelFile.exists() || modelFile.length() < AiModelPrefs.DEFAULT_MIN_SIZE) {
                 _aiModelStatus.value = AiModelStatus.NotDownloaded
@@ -772,7 +772,7 @@ class ChatViewModel(
         return try {
             val modelFile = AiModelPrefs.getModelFile(appContext)
             if (!GemmaLLM.isLoaded() && modelFile.exists() && modelFile.length() >= AiModelPrefs.DEFAULT_MIN_SIZE) {
-                kotlinx.coroutines.withContext(Dispatchers.IO) { GemmaLLM.loadModel(appContext, modelFile.absolutePath) }
+                kotlinx.coroutines.withContext(Dispatchers.Default) { GemmaLLM.loadModel(appContext, modelFile.absolutePath) }
             }
             if (!GemmaLLM.isLoaded()) return null
             GemmaLLM.answerGstQuestion(query, context)
@@ -2096,7 +2096,7 @@ You have native mastery over Hinglish, Hindi (Devanagari), and Indian business t
             // Run the whole ledger/stock/HSN resolution + DB insert off the main thread.
             // This is the step that made voucher confirmation feel slow — it does many
             // sequential DB round-trips and HSN/GST scoring, none of which needs Main.
-            val createdItemCount = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            val createdItemCount = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
                 buildAndInsertVoucher(companyId, draft)
             }
 
@@ -2109,7 +2109,7 @@ You have native mastery over Hinglish, Hindi (Devanagari), and Indian business t
     /**
      * Resolves ledgers, units, stock items and HSN/GST, then inserts the voucher.
      * Returns the number of inventory items attached, or null if the voucher could
-     * not be built (no ledger entries). Runs on [Dispatchers.IO].
+     * not be built (no ledger entries). Runs on [Dispatchers.Default].
      */
     private suspend fun buildAndInsertVoucher(companyId: Int, draft: AiResponse.DraftVoucher): Int? {
         val voucherDate = com.minhas.teller.utils.FinanceHelper.parseVoucherDate(draft.date)

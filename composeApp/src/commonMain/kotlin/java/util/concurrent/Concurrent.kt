@@ -74,7 +74,7 @@ enum class TimeUnit {
     abstract fun toDays(d: Long): Long
 }
 
-class ConcurrentHashMap<K, V> : LinkedHashMap<K, V>() {
+class ConcurrentHashMap<K, V>(private val map: MutableMap<K, V> = mutableMapOf()) : MutableMap<K, V> by map {
     fun putIfAbsent(key: K, value: V): V? {
         val current = get(key)
         if (current == null) {

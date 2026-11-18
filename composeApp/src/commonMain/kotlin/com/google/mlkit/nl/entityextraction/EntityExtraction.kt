@@ -32,8 +32,8 @@ class EntityExtractorOptions {
 }
 
 interface EntityExtractor {
-    fun downloadModelIfNeeded(): Task<Void> = Task()
-    fun annotate(params: EntityExtractionParams): Task<List<EntityAnnotation>> = Task()
+    fun downloadModelIfNeeded(): com.google.android.gms.tasks.Task<Any?> = com.google.android.gms.tasks.Task<Any?>()
+    fun annotate(params: EntityExtractionParams): com.google.android.gms.tasks.Task<List<EntityAnnotation>> = com.google.android.gms.tasks.Task<List<EntityAnnotation>>()
     fun close() {}
 }
 

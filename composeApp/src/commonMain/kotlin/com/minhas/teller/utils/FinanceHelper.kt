@@ -3101,7 +3101,7 @@ object FinanceHelper {
         }
     }
 
-    suspend fun chatWithFinance(context: Context, query: String, financialContext: String, history: String): AiResult = withContext(Dispatchers.IO) {
+    suspend fun chatWithFinance(context: Context, query: String, financialContext: String, history: String): AiResult = withContext(Dispatchers.Default) {
         val reportResult = parseReportCommandLocal(query)
         if (reportResult != null) return@withContext AiResult(reportResult, Confidence.HIGH, "regex_report")
 

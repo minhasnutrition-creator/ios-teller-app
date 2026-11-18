@@ -87,7 +87,7 @@ class DashboardViewModel(
     val helafinNudges: StateFlow<List<HelafinNudge>> = _helafinNudges
 
     fun loadDashboardData(companyId: Int, context: Context? = null) {
-        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.Default) {
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.DAY_OF_MONTH, 1)
             val fromDate = calendar.time

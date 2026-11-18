@@ -246,7 +246,7 @@ object OcrHelper {
         Pair(null, null)
     }
 
-    suspend fun analyzeReceipt(context: Context, uri: Uri): SmartReceiptData? = withContext(Dispatchers.IO) {
+    suspend fun analyzeReceipt(context: Context, uri: Uri): SmartReceiptData? = withContext(Dispatchers.Default) {
         val rawText = try {
             val image = InputImage.fromFilePath(context, uri)
             val visionText = latinRecognizer.process(image).await()
@@ -268,7 +268,7 @@ object OcrHelper {
         context: Context,
         uri: Uri,
         voucherType: String? = null
-    ): Pair<SmartReceiptData?, String> = withContext(Dispatchers.IO) {
+    ): Pair<SmartReceiptData?, String> = withContext(Dispatchers.Default) {
         val geminiResult = GeminiReceiptScanner.scan(context, uri, voucherType)
         if (geminiResult != null && (geminiResult.vendor != null || geminiResult.amount != null)) {
             Log.i(TAG, "Receipt scanned with Gemini Flash (type=$voucherType)")
@@ -369,7 +369,7 @@ object OcrHelper {
     // Everything is on-device and free. No internet, no API keys.
 
     /** Scan a QR/barcode from an image (used for P2P sync pairing). Returns the raw decoded string. */
-    suspend fun scanQrFromUri(context: Context, uri: Uri): String? = withContext(Dispatchers.IO) {
+    suspend fun scanQrFromUri(context: Context, uri: Uri): String? = withContext(Dispatchers.Default) {
         try {
             val image = InputImage.fromFilePath(context, uri)
             barcodeScanner.process(image).await()
@@ -381,7 +381,7 @@ object OcrHelper {
     }
 
     suspend fun scanInventoryItem(context: Context, uri: Uri): ScannedInventoryItem =
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Default) {
             // ── Preprocessing ────────────────────────────────────────────
             val (bitmap, rotationDegrees) = try {
                 preprocessImage(context, uri)

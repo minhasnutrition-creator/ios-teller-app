@@ -1,7 +1,7 @@
 package java.util
 
-class Calendar private constructor() {
-    var timeInMillis: Long = com.minhas.teller.currentTimeMillis()
+class Calendar(var timeInMillis: Long = com.minhas.teller.currentTimeMillis()) {
+    fun clone(): Calendar = Calendar(timeInMillis)
     var time: Date
         get() = Date(timeInMillis)
         set(value) {

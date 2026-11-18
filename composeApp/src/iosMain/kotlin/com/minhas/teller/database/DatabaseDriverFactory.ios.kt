@@ -30,7 +30,7 @@ fun getIosDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
         name = dbFilePath
     )
         .setDriver(BundledSQLiteDriver())
-        .setQueryCoroutineContext(Dispatchers.IO)
+        .setQueryCoroutineContext(Dispatchers.Default)
         .addMigrations(
             AppDatabase.MIGRATION_7_8,
             AppDatabase.MIGRATION_8_9,

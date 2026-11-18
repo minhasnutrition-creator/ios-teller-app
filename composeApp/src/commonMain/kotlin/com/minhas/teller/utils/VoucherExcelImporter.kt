@@ -1483,7 +1483,7 @@ object VoucherExcelImporter {
         val data = json.optJSONArray("data") ?: return 0
         var count = 0
 
-        kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
+        kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.Default) {
             val allLedgers = db.ledgerDao().getAllLedgersSync(companyId).toMutableList()
 
             suspend fun ensureLedger(name: String, group: String): com.minhas.teller.data.entities.Ledger {

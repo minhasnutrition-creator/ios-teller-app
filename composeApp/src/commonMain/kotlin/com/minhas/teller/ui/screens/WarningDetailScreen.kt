@@ -157,7 +157,7 @@ fun WarningDetailScreen(navController: NavHostController, warningId: String) {
                 var eRefresh by remember { mutableStateOf(0) }
                 LaunchedEffect(currentCompanyId, eRefresh) {
                     val cid = currentCompanyId ?: return@LaunchedEffect
-                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
                         val all = db.voucherDao().getAllVouchersWithAllEntries(cid)
                         val ledgers = ledgerRepository.getAllLedgersSync(cid)
                         val st = com.minhas.teller.utils.EInvoiceStore.status(cid, all, ledgers, context)
@@ -226,7 +226,7 @@ fun WarningDetailScreen(navController: NavHostController, warningId: String) {
                         val companyId = currentCompanyId ?: return@Button
                         bulkSending = true
                         bulkResultMsg = null
-                        scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                        scope.launch(kotlinx.coroutines.Dispatchers.Default) {
                             val company = db.companyDao().getCompanyByIdSync(companyId)
                             val allLedgers = ledgerRepository.getAllLedgersSync(companyId)
                             val stockMap = db.stockItemDao().getAllStockItems(companyId).associateBy { it.id }

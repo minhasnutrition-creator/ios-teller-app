@@ -39,7 +39,7 @@ object DeepSeekClient {
         userQuery: String,
         financialContext: String = "",
         history: List<Map<String, String>> = emptyList()
-    ): String? = withContext(Dispatchers.IO) {
+    ): String? = withContext(Dispatchers.Default) {
 
         val apiKey = BuildConfig.DEEPSEEK_API_KEY
         if (apiKey.isBlank()) {
@@ -156,7 +156,7 @@ object DeepSeekClient {
     suspend fun smartChat(
         question: String,
         history: List<Map<String, String>> = emptyList()
-    ): String? = withContext(Dispatchers.IO) {
+    ): String? = withContext(Dispatchers.Default) {
 
         val apiKey = BuildConfig.DEEPSEEK_API_KEY
         if (apiKey.isBlank()) {
@@ -228,7 +228,7 @@ object DeepSeekClient {
     suspend fun verifyAnswer(
         question: String,
         candidateAnswer: String
-    ): String? = withContext(Dispatchers.IO) {
+    ): String? = withContext(Dispatchers.Default) {
 
         val apiKey = BuildConfig.DEEPSEEK_API_KEY
         if (apiKey.isBlank()) {

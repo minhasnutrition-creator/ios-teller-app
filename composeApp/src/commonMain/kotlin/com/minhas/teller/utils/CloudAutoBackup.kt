@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  * is signed in. Debounces rapid updates (e.g. bulk entry edits) so network traffic is minimized.
  */
 object CloudAutoBackup {
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private var backupJob: Job? = null
 
     fun trigger() {

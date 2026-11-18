@@ -24,7 +24,7 @@ import java.util.Locale
 
 object QuotationPdfExporter {
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     fun generateQuotationPdf(
         context: Context,

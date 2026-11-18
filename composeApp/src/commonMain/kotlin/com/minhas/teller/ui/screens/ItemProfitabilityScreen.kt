@@ -117,7 +117,7 @@ fun ItemProfitabilityScreen(navController: NavHostController) {
     LaunchedEffect(fromDate, toDate, currentCompanyId) {
         val cid = currentCompanyId ?: return@LaunchedEffect
         isLoading = true
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Default) {
             try {
                 // Profit per item = sale value WITHOUT GST − what those goods cost WITHOUT GST, where cost
                 // is the weighted-average purchase price of the stock on the day of each sale (opening

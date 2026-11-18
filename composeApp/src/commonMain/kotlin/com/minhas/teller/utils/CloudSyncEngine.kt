@@ -58,7 +58,7 @@ class CloudSyncEngine(private val context: Context) {
      * Uploads the phone's current data as the master copy to the cloud.
      * Deletions on the phone are properly saved as tombstones on the cloud.
      */
-    suspend fun backup(): SyncResult = withContext(Dispatchers.IO) {
+    suspend fun backup(): SyncResult = withContext(Dispatchers.Default) {
         val uid = SessionManager.currentUserId.value
             ?: return@withContext SyncResult(false, "Not signed in to Google account")
         val start = System.currentTimeMillis()
@@ -80,7 +80,7 @@ class CloudSyncEngine(private val context: Context) {
      * Downloads cloud data to this phone.
      * Strictly filters out deleted companies, deleted vouchers, and deleted items so they never resurrect.
      */
-    suspend fun restore(): SyncResult = withContext(Dispatchers.IO) {
+    suspend fun restore(): SyncResult = withContext(Dispatchers.Default) {
         val uid = SessionManager.currentUserId.value
             ?: return@withContext SyncResult(false, "Not signed in to Google account")
         val start = System.currentTimeMillis()
@@ -100,7 +100,7 @@ class CloudSyncEngine(private val context: Context) {
     /**
      * Two-way synchronization for background tasks. Pushes local changes first, then pulls updates.
      */
-    suspend fun sync(): SyncResult = withContext(Dispatchers.IO) {
+    suspend fun sync(): SyncResult = withContext(Dispatchers.Default) {
         val uid = SessionManager.currentUserId.value
             ?: return@withContext SyncResult(false, "Not signed in")
         val start = System.currentTimeMillis()

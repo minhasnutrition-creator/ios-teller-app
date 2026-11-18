@@ -92,7 +92,7 @@ fun PdfViewerScreen(
 
     LaunchedEffect(filePath) {
         isLoading = true
-        withContext(Dispatchers.IO) {
+        withContext(Dispatchers.Default) {
             try {
                 // Render at a moderate scale; fall back to lower resolution if the
                 // higher one runs out of memory (a large PDF at 2x can OOM and crash).

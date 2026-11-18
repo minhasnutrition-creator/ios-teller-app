@@ -115,15 +115,24 @@ open class FileOutputStream(val file: File, val append: Boolean = false) : Outpu
     constructor(path: String, append: Boolean = false) : this(File(path), append)
 }
 
-class InputStreamReader(val inputStream: InputStream, val charsetName: String = "UTF-8") {
+class InputStreamReader(val inputStream: InputStream, val charset: Any? = "UTF-8") {
     fun close() { inputStream.close() }
 }
 
-class BufferedReader(val reader: InputStreamReader) {
+class BufferedReader(val reader: Any?) {
     fun readLine(): String? = null
     fun readLines(): List<String> = emptyList()
     fun readText(): String = ""
-    fun close() { reader.close() }
+    fun close() {}
+}
+
+class FileReader(val file: File) : InputStream()
+
+class PrintWriter(val out: Any?) {
+    fun print(s: Any?) {}
+    fun println(s: Any? = "") {}
+    fun flush() {}
+    fun close() {}
 }
 
 class FileWriter(val file: File, val append: Boolean = false) {
@@ -131,4 +140,22 @@ class FileWriter(val file: File, val append: Boolean = false) {
     fun write(text: String) {}
     fun flush() {}
     fun close() {}
+}
+
+fun InputStream.readBytes(): ByteArray = ByteArray(0)
+fun InputStream.bufferedReader(): BufferedReader = BufferedReader(this)
+
+inline fun <T, R> T.use(block: (T) -> R): R {
+    try {
+        return block(this)
+    } finally {
+        when (this) {
+            is InputStream -> this.close()
+            is OutputStream -> this.close()
+            is BufferedReader -> this.close()
+            is InputStreamReader -> this.close()
+            is FileWriter -> this.close()
+            is PrintWriter -> this.close()
+        }
+    }
 }

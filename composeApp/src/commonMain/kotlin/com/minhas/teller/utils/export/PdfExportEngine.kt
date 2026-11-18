@@ -16,7 +16,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Locale
 
-typealias BaseColor = java.awt.Color
+import com.minhas.teller.utils.BaseColor
 
 object PdfExportEngine {
     private const val TAG = "PdfExportEngine"

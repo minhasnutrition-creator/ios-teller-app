@@ -55,7 +55,7 @@ class DashboardAttentionViewModel(
     val state: StateFlow<DashboardAttentionState> = _state
 
     fun loadAttentionItems(companyId: Int, ignoredIds: Set<String> = emptySet()) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val allVouchers = voucherRepository.getAllVouchersWithAllEntries(companyId)
                 val allLedgers = ledgerRepository.getAllLedgersSync(companyId)
@@ -245,7 +245,7 @@ class DashboardAttentionViewModel(
 
     /** Return the specific vouchers that triggered a warning, so a detail screen can list them. */
     fun getWarningVouchers(companyId: Int, warningId: String, onResult: (List<WarningVoucher>) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 // Overdue receivables come from the outstanding-vouchers view, not the voucher list.
                 if (warningId == "overdue") {

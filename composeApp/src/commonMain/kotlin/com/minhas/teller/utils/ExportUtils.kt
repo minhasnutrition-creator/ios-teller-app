@@ -106,7 +106,7 @@ internal fun List<InventoryEntry>.payableTotal(): Double {
 
 object ExportUtils {
     // Dedicated scope replaces GlobalScope — tied to object lifetime, cancelled if process dies
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     init {
         com.minhas.teller.TellerApp.configureGlobalProperties()

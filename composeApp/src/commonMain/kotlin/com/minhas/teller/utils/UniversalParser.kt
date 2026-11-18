@@ -75,24 +75,21 @@ object UniversalParser {
     )
 
     fun sanitizeXml(bytes: ByteArray): ByteArray {
-        var rawText: String
-        if (bytes.size >= 2 && bytes[0] == 0xFF.toByte() && bytes[1] == 0xFE.toByte()) {
-            rawText = String(bytes, 2, bytes.size - 2, Charsets.UTF_16LE)
+        val rawText: String = if (bytes.size >= 2 && bytes[0] == 0xFF.toByte() && bytes[1] == 0xFE.toByte()) {
+            bytes.decodeToString(2, bytes.size, throwOnInvalidSequence = false)
         } else if (bytes.size >= 2 && bytes[0] == 0xFE.toByte() && bytes[1] == 0xFF.toByte()) {
-            rawText = String(bytes, 2, bytes.size - 2, Charsets.UTF_16BE)
+            bytes.decodeToString(2, bytes.size, throwOnInvalidSequence = false)
         } else if (bytes.size >= 3 && bytes[0] == 0xEF.toByte() && bytes[1] == 0xBB.toByte() && bytes[2] == 0xBF.toByte()) {
-            rawText = String(bytes, 3, bytes.size - 3, Charsets.UTF_8)
-        } else if (bytes.size >= 4 && bytes[0] == 0x3C.toByte() && bytes[1] == 0x00.toByte()) {
-            rawText = String(bytes, Charsets.UTF_16LE)
+            bytes.decodeToString(3, bytes.size, throwOnInvalidSequence = false)
         } else {
-            rawText = String(bytes, Charsets.UTF_8)
+            bytes.decodeToString(throwOnInvalidSequence = false)
         }
 
         // Replace bare & with &amp;
         val ampCleaned = rawText.replace(Regex("&(?!(amp|lt|gt|quot|apos|#\\d+|#x[0-9a-fA-F]+);)"), "&amp;")
         // Remove invalid XML control characters
         val sanitized = ampCleaned.replace(Regex("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]"), "")
-        return sanitized.toByteArray(Charsets.UTF_8)
+        return sanitized.encodeToByteArray()
     }
 
     /**

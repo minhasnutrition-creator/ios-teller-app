@@ -68,7 +68,7 @@ class HSNDataManager private constructor(private val context: Context) {
      * rates is available, this always loads the bundled, current-rate dataset (HsnPresetData) —
      * fully offline, no network call, matching the app's offline/free requirement.
      */
-    suspend fun importFromMultipleSources(): HSNImportResult = withContext(Dispatchers.IO) {
+    suspend fun importFromMultipleSources(): HSNImportResult = withContext(Dispatchers.Default) {
         val embeddedResult = loadEmbeddedHSNDatabase()
         if (embeddedResult.success) {
             return@withContext embeddedResult.copy(source = "embedded_database")
@@ -84,7 +84,7 @@ class HSNDataManager private constructor(private val context: Context) {
     /**
      * Try importing from a specific API source
      */
-    private suspend fun tryImportFromAPI(apiBaseUrl: String): HSNImportResult = withContext(Dispatchers.IO) {
+    private suspend fun tryImportFromAPI(apiBaseUrl: String): HSNImportResult = withContext(Dispatchers.Default) {
         try {
             val url = if (apiBaseUrl.contains("githubusercontent.com")) {
                 URL(apiBaseUrl)
@@ -126,7 +126,7 @@ class HSNDataManager private constructor(private val context: Context) {
     /**
      * Import HSN data from file (CSV, JSON, Excel)
      */
-    suspend fun importFromFile(uri: Uri): HSNImportResult = withContext(Dispatchers.IO) {
+    suspend fun importFromFile(uri: Uri): HSNImportResult = withContext(Dispatchers.Default) {
         try {
             val fileName = getFileName(uri)
             val extension = fileName.substringAfterLast(".", "").lowercase()
@@ -163,7 +163,7 @@ class HSNDataManager private constructor(private val context: Context) {
     /**
      * Load embedded default HSN database (comprehensive common codes)
      */
-    private suspend fun loadEmbeddedHSNDatabase(): HSNImportResult = withContext(Dispatchers.IO) {
+    private suspend fun loadEmbeddedHSNDatabase(): HSNImportResult = withContext(Dispatchers.Default) {
         // Replace the whole directory so the bundled full HSN list is the single source of truth
         // and stale hand-curated entries (or rates from an older dataset) can't linger.
         cachedDirectory = null
@@ -318,7 +318,7 @@ class HSNDataManager private constructor(private val context: Context) {
     /**
      * Save HSN entries to database
      */
-    private suspend fun saveHSNEntries(entries: List<HsnEntry>): Pair<Int, Int> = withContext(Dispatchers.IO) {
+    private suspend fun saveHSNEntries(entries: List<HsnEntry>): Pair<Int, Int> = withContext(Dispatchers.Default) {
         val sanitizedList = entries.map { sanitizeHsnEntry(it) }
         sanitizedList.chunked(500).forEach { chunk ->
             hsnDao.insertAll(chunk)
@@ -388,18 +388,18 @@ class HSNDataManager private constructor(private val context: Context) {
     /**
      * Get total HSN count in database
      */
-    suspend fun getHSNCount(): Int = withContext(Dispatchers.IO) {
+    suspend fun getHSNCount(): Int = withContext(Dispatchers.Default) {
         hsnDao.count()
     }
 
     /**
      * Search HSN codes by keyword
      */
-    suspend fun searchHSN(query: String): List<HsnEntry> = withContext(Dispatchers.IO) {
+    suspend fun searchHSN(query: String): List<HsnEntry> = withContext(Dispatchers.Default) {
         hsnDao.search("%$query%")
     }
 
-    suspend fun ensureDefaultHSNLoaded() = withContext(Dispatchers.IO) {
+    suspend fun ensureDefaultHSNLoaded() = withContext(Dispatchers.Default) {
         val defaultEntries = getDefaultHSNEntries()
         val storedVersion = prefs.getInt("hsn_data_version", 0)
         // Row-count alone can't detect "same number of rows, some rates changed" — a device that
@@ -416,7 +416,7 @@ class HSNDataManager private constructor(private val context: Context) {
     /**
      * Search HSN locally, and fallback to online search if not found
      */
-    suspend fun lookupAndSaveHSNOnline(query: String): HsnEntry? = withContext(Dispatchers.IO) {
+    suspend fun lookupAndSaveHSNOnline(query: String): HsnEntry? = withContext(Dispatchers.Default) {
         if (query.isBlank()) return@withContext null
         
         ensureDefaultHSNLoaded()
@@ -476,7 +476,7 @@ class HSNDataManager private constructor(private val context: Context) {
     @Volatile
     private var cachedDirectory: List<HsnEntry>? = null
 
-    suspend fun getAllEntriesCached(): List<HsnEntry> = withContext(Dispatchers.IO) {
+    suspend fun getAllEntriesCached(): List<HsnEntry> = withContext(Dispatchers.Default) {
         ensureDefaultHSNLoaded()
         val count = hsnDao.count()
         val existing = cachedDirectory
@@ -493,7 +493,7 @@ class HSNDataManager private constructor(private val context: Context) {
     suspend fun searchFuzzyWithConfidence(
         query: String,
         maxResults: Int = 5
-    ): HsnFuzzyMatcher.LookupResult = withContext(Dispatchers.IO) {
+    ): HsnFuzzyMatcher.LookupResult = withContext(Dispatchers.Default) {
         if (query.isBlank()) {
             return@withContext HsnFuzzyMatcher.LookupResult(
                 HsnFuzzyMatcher.MatchConfidence.NONE,
@@ -508,7 +508,7 @@ class HSNDataManager private constructor(private val context: Context) {
      * Fuzzy search: finds close matches when the user misspells or reorders words.
      * Delegates to [HsnFuzzyMatcher] across the entire cached HSN & SAC directory.
      */
-    suspend fun searchFuzzy(query: String, maxResults: Int = 5): List<HsnEntry> = withContext(Dispatchers.IO) {
+    suspend fun searchFuzzy(query: String, maxResults: Int = 5): List<HsnEntry> = withContext(Dispatchers.Default) {
         return@withContext searchFuzzyWithConfidence(query, maxResults).suggestions.map { it.entry }
     }
 
@@ -627,12 +627,12 @@ class HSNDataManager private constructor(private val context: Context) {
         return dp[m][n]
     }
 
-    suspend fun getCategories(): List<String> = withContext(Dispatchers.IO) {
+    suspend fun getCategories(): List<String> = withContext(Dispatchers.Default) {
         ensureDefaultHSNLoaded()
         hsnDao.getCategories()
     }
 
-    suspend fun getEntriesByCategory(category: String): List<HsnEntry> = withContext(Dispatchers.IO) {
+    suspend fun getEntriesByCategory(category: String): List<HsnEntry> = withContext(Dispatchers.Default) {
         ensureDefaultHSNLoaded()
         hsnDao.getEntriesByCategory(category)
     }

@@ -18,8 +18,4 @@ object Build {
     }
 }
 
-class Bundle {
-    fun getString(key: String): String? = null
-    fun getInt(key: String, defaultValue: Int = 0): Int = defaultValue
-    fun getBoolean(key: String, defaultValue: Boolean = false): Boolean = defaultValue
-}
+

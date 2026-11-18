@@ -473,7 +473,7 @@ private fun formatCompact(value: Double): String = when {
 }
 
 private suspend fun exportChartAsPng(context: Context, chartData: AiResponse.QueryChart) {
-    withContext(Dispatchers.IO) {
+    withContext(Dispatchers.Default) {
         try {
             val width = 800
             val height = 500
@@ -570,7 +570,7 @@ private suspend fun shareChartAsPng(context: Context, chartData: AiResponse.Quer
 }
 
 private suspend fun exportRawCsv(context: Context, rawCsv: String, title: String) {
-    withContext(Dispatchers.IO) {
+    withContext(Dispatchers.Default) {
         try {
             val safeName = title.replace(Regex("[^a-zA-Z0-9 ]"), "").take(30).trim().replace(" ", "_")
             val file = File(context.cacheDir, "${safeName}_${System.currentTimeMillis()}.csv")

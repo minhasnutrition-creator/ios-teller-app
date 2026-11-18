@@ -87,7 +87,7 @@ fun DesktopCompanionScreen(navController: NavController) {
     val pendingPair by WebCompanionManager.pendingPair.collectAsState()
     LaunchedEffect(isRunning) {
         while (true) {
-            val ip = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            val ip = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
                 WebCompanionManager.getLocalIpAddress(context)
             }
             phoneIp = ip

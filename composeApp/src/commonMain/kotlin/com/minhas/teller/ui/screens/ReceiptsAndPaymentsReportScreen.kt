@@ -87,7 +87,7 @@ fun ReceiptsAndPaymentsReportScreen(navController: NavHostController) {
     LaunchedEffect(period, currentCompanyId, allLedgers) {
         val companyId = currentCompanyId ?: return@LaunchedEffect
         isLoading = true
-        data = withContext(Dispatchers.IO) {
+        data = withContext(Dispatchers.Default) {
             val (start, end) = periodRange(period)
             computeReceiptsPayments(database, allLedgers, companyId, start, end)
         }

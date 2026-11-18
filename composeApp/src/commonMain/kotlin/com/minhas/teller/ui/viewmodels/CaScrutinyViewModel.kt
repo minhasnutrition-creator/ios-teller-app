@@ -76,7 +76,7 @@ class CaScrutinyViewModel(
 
     fun loadComplianceData(companyId: Int, fromDate: Long, toDate: Long) {
         activeCompanyId = companyId
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 currentCompany = db.companyDao().getCompanyByIdSync(companyId)
                 val countryName = currentCompany?.country ?: "India"
@@ -608,7 +608,7 @@ class CaScrutinyViewModel(
         entries: List<com.minhas.teller.data.entities.VoucherEntry>,
         inventoryEntries: List<com.minhas.teller.data.entities.InventoryEntry> = emptyList()
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 voucherRepository.updateVoucherWithAllEntries(voucher, entries, inventoryEntries)
                 loadComplianceData(activeCompanyId, 0L, System.currentTimeMillis())
@@ -620,7 +620,7 @@ class CaScrutinyViewModel(
     }
 
     fun attachEvidenceToVoucher(voucherId: Int, companyId: Int, fileUri: String, ocrText: String? = null) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             val attachment = EvidenceAttachment(
                 voucherId = voucherId,
                 companyId = companyId,
@@ -635,7 +635,7 @@ class CaScrutinyViewModel(
     fun generateCaPack(context: Context, onComplete: (File) -> Unit) {
         val company = currentCompany ?: return
         _uiState.value = _uiState.value.copy(isGenerating = true)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 ExportUtils.exportCaCompliancePack(
                     context = context,
@@ -671,7 +671,7 @@ class CaScrutinyViewModel(
     fun generateScrutinyPack(context: Context, onComplete: (File) -> Unit) {
         val company = currentCompany ?: return
         _uiState.value = _uiState.value.copy(isGenerating = true)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val attachments = db.evidenceAttachmentDao().getAttachmentsForCompany(activeCompanyId)
                 val auditLogs = db.auditLogDao().getLogsForCompany(activeCompanyId)

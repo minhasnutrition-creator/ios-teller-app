@@ -56,7 +56,7 @@ class TellerScoreViewModel(
     val scoreData: StateFlow<TellerScoreData> = _scoreData
 
     fun loadScore(companyId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val allVouchers = voucherRepository.getAllVouchersWithAllEntries(companyId)
                 val allLedgers = ledgerRepository.getAllLedgersSync(companyId)

@@ -62,7 +62,7 @@ fun SignatureDrawingScreen(navController: NavController) {
                         }
                         scope.launch {
                             try {
-                                withContext(Dispatchers.IO) {
+                                withContext(Dispatchers.Default) {
                                     val dir = File(PlatformUtils.getAppDataDirectory(), "signatures")
                                     if (!dir.exists()) dir.mkdirs()
                                     val sigFile = File(dir, "sig_${currentCompanyId ?: 1}.png")

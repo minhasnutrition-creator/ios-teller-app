@@ -61,7 +61,7 @@ Return ONLY valid JSON (no markdown, no extra text) in this exact format:
         val narration: String?
     )
 
-    suspend fun scan(context: Context, imageUri: Uri, voucherType: String? = null): GeminiResult? = withContext(Dispatchers.IO) {
+    suspend fun scan(context: Context, imageUri: Uri, voucherType: String? = null): GeminiResult? = withContext(Dispatchers.Default) {
         val apiKey = BuildConfig.GEMINI_API_KEY
         if (apiKey.isBlank()) {
             Log.d(TAG, "Gemini API key not configured, skipping cloud scan")

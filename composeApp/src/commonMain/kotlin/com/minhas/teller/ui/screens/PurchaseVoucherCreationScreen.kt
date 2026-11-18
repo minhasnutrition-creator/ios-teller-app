@@ -180,7 +180,7 @@ import java.util.*
 import androidx.compose.material3.HorizontalDivider
 
 @Composable
-fun GlassCard(
+private fun GlassCard(
 
     modifier: Modifier = Modifier,
 

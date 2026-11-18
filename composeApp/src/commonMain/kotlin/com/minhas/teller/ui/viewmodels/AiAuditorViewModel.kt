@@ -74,7 +74,7 @@ class AiAuditorViewModel(
     val auditState: StateFlow<AuditState> = _auditState
 
     fun runAudit(companyId: Int, countryName: String, currencySymbol: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             _auditState.value = AuditState(isAuditing = true)
             try {
                 val isIndia = countryName.equals("India", true)

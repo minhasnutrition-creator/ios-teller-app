@@ -1,6 +1,16 @@
 package android.content
 
 import com.minhas.teller.compat.SharedPreferences
+import com.minhas.teller.compat.InMemorySharedPreferences
+import java.io.File
+
+typealias SharedPreferences = com.minhas.teller.compat.SharedPreferences
+
+inline fun SharedPreferences.edit(commit: Boolean = false, action: SharedPreferences.Editor.() -> Unit) {
+    val editor = edit()
+    action(editor)
+    if (commit) editor.commit() else editor.apply()
+}
 
 /**
  * Multiplatform Context interface for iOS target.
@@ -8,11 +18,19 @@ import com.minhas.teller.compat.SharedPreferences
 interface Context {
     val packageName: String get() = "com.minhas.teller"
     val applicationContext: Context get() = this
-    fun getSharedPreferences(name: String, mode: Int = 0): SharedPreferences? = null
+    fun getSharedPreferences(name: String, mode: Int = 0): SharedPreferences = InMemorySharedPreferences.get(name)
     fun startActivity(intent: Any?) {}
     fun getSystemService(name: String): Any? = null
     fun grantUriPermission(toPackage: String?, uri: Any?, modeFlags: Int) {}
     fun checkSelfPermission(permission: String): Int = 0
+
+    fun getExternalFilesDir(type: String?): File = File("Documents")
+    fun getFilesDir(): File = File("Documents")
+    fun getCacheDir(): File = File("Cache")
+    val contentResolver: Any? get() = null
+    val assets: Any? get() = null
+    val resources: Any? get() = null
+    fun findActivity(): Any? = null
 
     companion object {
         const val MODE_PRIVATE = 0

@@ -3,7 +3,7 @@ package android.os
 open class Bundle {
     private val map = mutableMapOf<String, Any?>()
 
-    fun getStringArrayList(key: String): java.util.ArrayList<String>? = null
+    fun getStringArrayList(key: String): ArrayList<String>? = null
     fun getFloatArray(key: String): FloatArray? = null
     fun putString(key: String, value: String?) { map[key] = value }
     fun getString(key: String): String? = map[key] as? String
@@ -21,4 +21,16 @@ open class Handler(val looper: Any? = null) {
 
 object Looper {
     fun getMainLooper(): Any? = null
+}
+
+open class CancellationSignal {
+    val isCanceled: Boolean get() = false
+    fun cancel() {}
+}
+
+open class ParcelFileDescriptor {
+    val fileDescriptor: Any? = null
+    fun close() {}
+
+    open class AutoCloseOutputStream(val pfd: ParcelFileDescriptor) : java.io.OutputStream()
 }

@@ -96,7 +96,7 @@ fun Gstr2bReconcilerScreen(navController: NavHostController) {
             isProcessing = true
             scope.launch {
                 try {
-                    val jsonContent = withContext(Dispatchers.IO) {
+                    val jsonContent = withContext(Dispatchers.Default) {
                         context.contentResolver.openInputStream(uri)?.use { inputStream ->
                             BufferedReader(InputStreamReader(inputStream)).readText()
                         } ?: ""

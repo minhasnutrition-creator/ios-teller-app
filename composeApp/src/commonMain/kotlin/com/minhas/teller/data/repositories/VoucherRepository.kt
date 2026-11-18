@@ -241,7 +241,7 @@ class VoucherRepository(
     @androidx.annotation.VisibleForTesting
     internal fun isPartyLedgerName(name: String, group: String = ""): Boolean = Companion.isPartyLedgerName(name, group)
 
-    suspend fun getOutstandingVouchers(ledgerId: Int): List<OutstandingVoucher> = withContext(Dispatchers.IO) {
+    suspend fun getOutstandingVouchers(ledgerId: Int): List<OutstandingVoucher> = withContext(Dispatchers.Default) {
         val ledger = try { ledgerDao.getLedgerById(ledgerId).first() } catch (e: Exception) { return@withContext emptyList() }
         if (!isOutstandingEligible(ledger.group) || !isPartyLedger(ledger.group) || !isPartyLedgerName(ledger.name, ledger.group)) return@withContext emptyList()
         val companyId = ledger.companyId
@@ -279,7 +279,7 @@ class VoucherRepository(
         )
     }
 
-    suspend fun getAllOutstandingVouchers(companyId: Int): List<OutstandingVoucher> = withContext(Dispatchers.IO) {
+    suspend fun getAllOutstandingVouchers(companyId: Int): List<OutstandingVoucher> = withContext(Dispatchers.Default) {
         val ledgers = ledgerDao.getAllLedgersSync(companyId)
         val allAllocations = billAllocationDao.getAllAllocationsForCompany(companyId)
         val vouchers = voucherDao.getAllVouchersWithAllEntries(companyId)

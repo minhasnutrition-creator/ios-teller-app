@@ -94,7 +94,7 @@ class ImportCleanupViewModel(
     }
 
     fun loadJobs(companyId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             val jobs = db.importJobDao().getJobsForCompany(companyId)
             _uiState.value = _uiState.value.copy(activeJobs = jobs)
         }
@@ -121,7 +121,7 @@ class ImportCleanupViewModel(
             isVoucherImportSuccess = false
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val inputStream = context.contentResolver.openInputStream(fileUri)
                 if (inputStream == null) {
@@ -267,7 +267,7 @@ class ImportCleanupViewModel(
             return
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 // 1. Create a staging Job record
                 val job = ImportJob(
@@ -386,7 +386,7 @@ class ImportCleanupViewModel(
             isVoucherImportReady = false,
             isVoucherImportSuccess = false
         )
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val inputStream: InputStream? = context.contentResolver.openInputStream(fileUri)
                 if (inputStream == null) {
@@ -509,7 +509,7 @@ class ImportCleanupViewModel(
             processingStatus = "Auto-correcting sheet with HSN & GST codes...",
             showCorrectionDialog = false
         )
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val correctedBytes = VoucherExcelImporter.correctWorkbook(
                     inputBytes = bytes,
@@ -632,7 +632,7 @@ class ImportCleanupViewModel(
             importError = null,
             importErrors = emptyList()
         )
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val existingItemsMap = try {
                     db.stockItemDao().getAllStockItems(companyId).associateBy { it.name.trim().lowercase() }
@@ -700,7 +700,7 @@ class ImportCleanupViewModel(
             importSuccessMessage = null
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val allLedgers = db.ledgerDao().getAllLedgersSync(companyId).toMutableList()
 
@@ -1139,7 +1139,7 @@ class ImportCleanupViewModel(
      */
     fun downloadCorrectedFile(context: Context) {
         val bytes = _uiState.value.correctedFileBytes ?: return
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 ExcelImportSampleGenerator.saveBytesToDownloads(
                     context,
@@ -1161,7 +1161,7 @@ class ImportCleanupViewModel(
      * Downloads a sample Excel template for the chosen voucher type.
      */
     fun downloadSampleTemplate(context: Context, template: ExcelImportSampleGenerator.VoucherTemplate) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 ExcelImportSampleGenerator.saveToDownloads(context, template)
                 withContext(Dispatchers.Main) {
@@ -1212,7 +1212,7 @@ class ImportCleanupViewModel(
             importError = null,
             importSuccessMessage = null
         )
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 val allLedgers = db.ledgerDao().getAllLedgersSync(companyId).toMutableList()
 
@@ -1640,7 +1640,7 @@ class ImportCleanupViewModel(
      * accounts, database engine artifacts, and sanitizes company books.
      */
     fun cleanBooksAndPurgeBogusData(companyId: Int, onComplete: ((PurgeResult) -> kotlin.Unit)? = null) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 var vCount = 0
                 var lCount = 0

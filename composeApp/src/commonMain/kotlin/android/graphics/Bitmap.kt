@@ -23,6 +23,7 @@ open class Bitmap {
 
     fun setPixel(x: Int, y: Int, color: Int) {}
     fun getPixel(x: Int, y: Int): Int = 0
+    fun recycle() {}
 
     companion object {
         fun createBitmap(width: Int, height: Int, config: Config): Bitmap {
@@ -65,6 +66,10 @@ class Typeface {
     }
 }
 
+class BlurMaskFilter(val radius: Float, val style: Blur) {
+    enum class Blur { NORMAL, SOLID, OUTER, INNER }
+}
+
 class Paint {
     var color: Int = 0
     var strokeWidth: Float = 1f
@@ -74,19 +79,33 @@ class Paint {
     var strokeJoin: Join = Join.MITER
     var textSize: Float = 12f
     var typeface: Typeface? = null
+    var textAlign: Align = Align.LEFT
+    var isFakeBoldText: Boolean = false
+    var maskFilter: Any? = null
 
     enum class Style { FILL, STROKE, FILL_AND_STROKE }
     enum class Cap { BUTT, ROUND, SQUARE }
     enum class Join { MITER, ROUND, BEVEL }
+    enum class Align { LEFT, CENTER, RIGHT }
+
+    fun measureText(text: String): Float = text.length * 8f
 }
 
 class Canvas(val bitmap: Bitmap? = null) {
     fun drawColor(color: Int) {}
     fun drawPath(path: Path, paint: Paint) {}
     fun drawText(text: String, x: Float, y: Float, paint: Paint) {}
+    fun drawText(text: String, start: Int, end: Int, x: Float, y: Float, paint: Paint) {}
     fun drawRect(rect: RectF, paint: Paint) {}
     fun drawRoundRect(rect: RectF, rx: Float, ry: Float, paint: Paint) {}
     fun drawLine(startX: Float, startY: Float, stopX: Float, stopY: Float, paint: Paint) {}
+    fun drawCircle(cx: Float, cy: Float, radius: Float, paint: Paint) {}
+    fun drawBitmap(bitmap: Bitmap, left: Float, top: Float, paint: Paint? = null) {}
+    fun save(): Int = 0
+    fun restore() {}
+    fun translate(dx: Float, dy: Float) {}
+    fun scale(sx: Float, sy: Float) {}
+    fun rotate(degrees: Float) {}
 }
 
 object Color {

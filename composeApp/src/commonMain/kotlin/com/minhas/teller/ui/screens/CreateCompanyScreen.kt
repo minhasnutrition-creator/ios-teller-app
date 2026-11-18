@@ -123,7 +123,7 @@ fun CreateCompanyScreen(navController: NavHostController) {
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             if (uri != null) {
-                scope.launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.Default) {
                     val saved = saveImageToInternalStorage(context, uri, "company_logo")
                     withContext(Dispatchers.Main) { logoUri = saved }
                 }
@@ -135,7 +135,7 @@ fun CreateCompanyScreen(navController: NavHostController) {
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
             if (uri != null) {
-                scope.launch(Dispatchers.IO) {
+                scope.launch(Dispatchers.Default) {
                     val saved = saveImageToInternalStorage(context, uri, "company_sig")
                     withContext(Dispatchers.Main) { signatureUri = saved }
                 }

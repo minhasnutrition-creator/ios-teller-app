@@ -37,8 +37,9 @@ object UniversalBackupImporter {
         val lowerName = filename?.lowercase() ?: ""
 
         // 1. Tally XML (supports UTF-8, UTF-16LE, and BOM)
-        val headStrUtf8 = if (bytes.size > 2000) String(bytes, 0, 2000, Charsets.UTF_8) else String(bytes, Charsets.UTF_8)
-        val headStrUtf16 = if (bytes.size > 2000) String(bytes, 0, 2000, Charsets.UTF_16LE) else String(bytes, Charsets.UTF_16LE)
+        val sampleLen = minOf(2000, bytes.size)
+        val headStrUtf8 = bytes.decodeToString(0, sampleLen, throwOnInvalidSequence = false)
+        val headStrUtf16 = runCatching { bytes.decodeToString(0, sampleLen, throwOnInvalidSequence = false) }.getOrDefault("")
         val isXml = headStrUtf8.contains("<ENVELOPE", ignoreCase = true) || headStrUtf16.contains("<ENVELOPE", ignoreCase = true) ||
             headStrUtf8.contains("<TALLYMESSAGE", ignoreCase = true) || headStrUtf16.contains("<TALLYMESSAGE", ignoreCase = true) ||
             headStrUtf8.contains("<LEDGER", ignoreCase = true) || headStrUtf16.contains("<LEDGER", ignoreCase = true) ||

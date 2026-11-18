@@ -78,25 +78,25 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
         val MIGRATION_7_8 = object : Migration(7, 8) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE vouchers ADD COLUMN customField TEXT DEFAULT NULL")
             }
         }
 
         val MIGRATION_8_9 = object : Migration(8, 9) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("CREATE TABLE IF NOT EXISTS `audit_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `action` TEXT NOT NULL, `entityType` TEXT NOT NULL, `entityId` TEXT NOT NULL, `details` TEXT NOT NULL, `companyId` INTEGER NOT NULL)")
             }
         }
 
         val MIGRATION_9_10 = object : Migration(9, 10) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE companies ADD COLUMN backupEnabled INTEGER NOT NULL DEFAULT 0")
             }
         }
 
         val MIGRATION_10_11 = object : Migration(10, 11) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE ledgers ADD COLUMN maintainBillWise INTEGER NOT NULL DEFAULT 0")
                 connection.execSQL("ALTER TABLE bill_allocations ADD COLUMN refName TEXT DEFAULT NULL")
                 connection.execSQL("ALTER TABLE bill_allocations ADD COLUMN refType TEXT DEFAULT NULL")
@@ -110,7 +110,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_11_12 = object : Migration(11, 12) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE vouchers ADD COLUMN chargeInterest INTEGER NOT NULL DEFAULT 0")
                 connection.execSQL("ALTER TABLE vouchers ADD COLUMN interestRate REAL NOT NULL DEFAULT 0.0")
                 connection.execSQL("ALTER TABLE vouchers ADD COLUMN interestDays INTEGER NOT NULL DEFAULT 0")
@@ -118,7 +118,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_12_13 = object : Migration(12, 13) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE companies ADD COLUMN logoUri TEXT DEFAULT NULL")
                 connection.execSQL("ALTER TABLE companies ADD COLUMN signatureUri TEXT DEFAULT NULL")
                 connection.execSQL("ALTER TABLE companies ADD COLUMN stampDesignName TEXT DEFAULT NULL")
@@ -128,14 +128,14 @@ abstract class AppDatabase : RoomDatabase() {
         // Bridge migration: v13 -> v19 for users who were on intermediate builds
         // These versions had no schema changes that weren't captured by v19_20
         val MIGRATION_13_19 = object : Migration(13, 19) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // No-op: versions 14-18 had no schema changes beyond what is
                 // already present. The next migration (19->20) adds HSN/tax columns.
             }
         }
 
         val MIGRATION_19_20 = object : Migration(19, 20) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // Add HSN and Tax fields to stock_items table
                 connection.execSQL("ALTER TABLE stock_items ADD COLUMN hsnCode TEXT DEFAULT NULL")
                 connection.execSQL("ALTER TABLE stock_items ADD COLUMN gstRate REAL NOT NULL DEFAULT 0.0")
@@ -157,7 +157,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_20_21 = object : Migration(20, 21) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // Create quotations table
                 connection.execSQL("""
                     CREATE TABLE IF NOT EXISTS `quotations` (
@@ -184,7 +184,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_21_22 = object : Migration(21, 22) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // No-op: schema was identical between v21 and v22;
                 // structural changes began in v22->v23 (isFinanced, hindi_mappings)
             }
@@ -192,7 +192,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         // Migration to add isFinanced column to vouchers
         val MIGRATION_22_23 = object : Migration(22, 23) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE vouchers ADD COLUMN isFinanced INTEGER NOT NULL DEFAULT 0")
                 // Create Hindi mappings table for multilingual support
                 connection.execSQL("""
@@ -212,7 +212,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_23_24 = object : Migration(23, 24) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("""
                     CREATE TABLE IF NOT EXISTS `import_jobs` (
                         `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
@@ -255,7 +255,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_24_25 = object : Migration(24, 25) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // Add indices on foreign key columns for query performance
                 connection.execSQL("CREATE INDEX IF NOT EXISTS `index_vouchers_companyId` ON `vouchers` (`companyId`)")
                 connection.execSQL("CREATE INDEX IF NOT EXISTS `index_vouchers_companyId_date` ON `vouchers` (`companyId`, `date`)")
@@ -278,13 +278,13 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_25_26 = object : Migration(25, 26) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE companies ADD COLUMN upiId TEXT DEFAULT NULL")
             }
         }
 
         val MIGRATION_26_27 = object : Migration(26, 27) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE ledgers ADD COLUMN phoneNumber TEXT DEFAULT NULL")
             }
         }
@@ -303,7 +303,7 @@ abstract class AppDatabase : RoomDatabase() {
          * only when the install has exactly one company, so we never guess.
          */
         val MIGRATION_27_28 = object : Migration(27, 28) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("""
                     UPDATE vouchers SET companyId = (
                         SELECT l.companyId FROM voucher_entries ve
@@ -327,7 +327,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_28_29 = object : Migration(28, 29) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE ledgers ADD COLUMN gstin TEXT DEFAULT NULL")
                 connection.execSQL("ALTER TABLE ledgers ADD COLUMN stateCode TEXT DEFAULT NULL")
                 connection.execSQL("ALTER TABLE vouchers ADD COLUMN placeOfSupply TEXT DEFAULT NULL")
@@ -337,7 +337,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_29_30 = object : Migration(29, 30) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // Add cloud-sync columns (uid = stable cross-device key, updatedAt = last-writer-wins
                 // clock, isDeleted = soft-delete tombstone). Existing rows are stamped "now" so the
                 // first sync uploads everything.
@@ -352,7 +352,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         val MIGRATION_30_31 = object : Migration(30, 31) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // Money migration: monetary columns move from REAL rupees to INTEGER paise.
                 // Rebuild each affected table so the stored values are multiplied by 100 (and
                 // ROUNDed to avoid the 12.34 * 100 = 1233.999... float truncation).
@@ -404,7 +404,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         /** v32: vouchers.returnOfVoucherId links a Sales/Purchase Return to the original bill. */
         val MIGRATION_31_32 = object : Migration(31, 32) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 // Nullable, no default - matches the entity field exactly, existing rows get NULL.
                 connection.execSQL("ALTER TABLE `vouchers` ADD COLUMN `returnOfVoucherId` INTEGER")
             }
@@ -412,7 +412,7 @@ abstract class AppDatabase : RoomDatabase() {
 
         /** v33: stock_items.barcode - scan a product's barcode at billing time to find it instantly. */
         val MIGRATION_32_33 = object : Migration(32, 33) {
-            override suspend fun migrate(connection: SQLiteConnection) {
+            override fun migrate(connection: SQLiteConnection) {
                 connection.execSQL("ALTER TABLE `stock_items` ADD COLUMN `barcode` TEXT DEFAULT NULL")
                 connection.execSQL("CREATE INDEX IF NOT EXISTS `index_stock_items_companyId_barcode` ON `stock_items` (`companyId`, `barcode`)")
             }

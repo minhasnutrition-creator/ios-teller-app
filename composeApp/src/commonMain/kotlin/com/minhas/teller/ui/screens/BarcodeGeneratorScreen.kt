@@ -440,7 +440,7 @@ fun BarcodeGeneratorScreen(navController: NavHostController) {
                                     )
                                     val labelList = List(copiesCount) { labelItem }
 
-                                    val pdfFile = withContext(Dispatchers.IO) {
+                                    val pdfFile = withContext(Dispatchers.Default) {
                                         BarcodeLabelGenerator.generateA4LabelSheetPdf(context, labelList, 3)
                                     }
 
@@ -512,7 +512,7 @@ fun BarcodeGeneratorScreen(navController: NavHostController) {
                                             companyName = if (includeCompanyName) company?.name ?: "TELLER" else null
                                         )
                                         val labelList = List(copiesCount) { labelItem }
-                                        val pdfFile = withContext(Dispatchers.IO) {
+                                        val pdfFile = withContext(Dispatchers.Default) {
                                             BarcodeLabelGenerator.generateA4LabelSheetPdf(context, labelList, 3)
                                         }
                                         isGeneratingPdf = false
@@ -548,7 +548,7 @@ fun BarcodeGeneratorScreen(navController: NavHostController) {
                                             companyName = if (includeCompanyName) company?.name ?: "TELLER" else null
                                         )
                                         val labelList = List(copiesCount) { labelItem }
-                                        val pdfFile = withContext(Dispatchers.IO) {
+                                        val pdfFile = withContext(Dispatchers.Default) {
                                             BarcodeLabelGenerator.generateA4LabelSheetPdf(context, labelList, 3)
                                         }
                                         isGeneratingPdf = false

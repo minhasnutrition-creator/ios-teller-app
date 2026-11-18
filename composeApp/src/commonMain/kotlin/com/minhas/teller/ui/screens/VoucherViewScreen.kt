@@ -1488,7 +1488,7 @@ fun VoucherViewScreen(navController: NavHostController, voucherId: Int) {
 }
 
 @Composable
-fun GlassCard(
+private fun GlassCard(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
