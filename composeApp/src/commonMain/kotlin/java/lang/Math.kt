@@ -2,6 +2,8 @@ package java.lang
 
 import kotlin.math.pow
 
+typealias StringBuilder = kotlin.text.StringBuilder
+
 object Math {
     fun abs(a: Int): Int = kotlin.math.abs(a)
     fun abs(a: Long): Long = kotlin.math.abs(a)

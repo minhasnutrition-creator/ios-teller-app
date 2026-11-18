@@ -47,6 +47,7 @@ object ThermalPrinterHelper {
         voucherWithAllEntries: VoucherWithAllEntries,
         stockItems: List<StockItem>,
         company: Company?,
+        customerName: String = "",
         paperWidth: PaperWidth = PaperWidth.MM_80
     ): String = ""
 
@@ -54,19 +55,23 @@ object ThermalPrinterHelper {
         voucherWithAllEntries: VoucherWithAllEntries,
         stockItems: List<StockItem>,
         company: Company?,
+        customerName: String = "",
         paperWidth: PaperWidth = PaperWidth.MM_80
     ): ByteArray = ByteArray(0)
 
     fun cleanPosText(text: String): String = text
-    fun buildTestReceiptBytes(paperWidth: PaperWidth = PaperWidth.MM_80): ByteArray = ByteArray(0)
+    fun buildTestReceiptBytes(label: String = "Test", paperWidth: PaperWidth = PaperWidth.MM_80): ByteArray = ByteArray(0)
 
     suspend fun testBluetoothConnection(deviceAddress: String): Pair<Boolean, String> = false to "Not supported on iOS"
     suspend fun testNetworkConnection(host: String, port: Int = 9100, timeoutMs: Int = 3000): Pair<Boolean, String> = false to "Not supported on iOS"
 
+    // Real call sites (EasyPrint.kt, VoucherViewScreen.kt) all invoke this positionally as
+    // (address, bytes, context) — matching that convention here instead of the alphabetic
+    // (context, address, data) order avoids a 3-way positional-argument mismatch everywhere.
     suspend fun printToBluetoothDevice(
-        context: Context,
         deviceAddress: String,
         data: ByteArray,
+        context: Context,
         isBle: Boolean = false
     ): Boolean = false
 

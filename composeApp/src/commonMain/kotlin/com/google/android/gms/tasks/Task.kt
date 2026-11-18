@@ -8,7 +8,5 @@ class Task<T> {
     fun getResult(): T? = null
 }
 
-suspend fun <T : Any> Task<T>.await(): T {
-    @Suppress("UNCHECKED_CAST")
-    return getResult() ?: com.google.firebase.database.DataSnapshot() as T
-}
+@Suppress("UNCHECKED_CAST")
+suspend fun <T : Any> Task<T>.await(): T = getResult() as T

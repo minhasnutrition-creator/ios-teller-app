@@ -7,6 +7,7 @@ enum class RoundingMode {
 class BigDecimal(val value: Double) : Comparable<BigDecimal> {
     constructor(str: String) : this(str.toDoubleOrNull() ?: 0.0)
     constructor(longVal: Long) : this(longVal.toDouble())
+    constructor(intVal: Int) : this(intVal.toDouble())
 
     fun multiply(other: BigDecimal): BigDecimal = BigDecimal(value * other.value)
     fun divide(other: BigDecimal, scale: Int = 0, roundingMode: RoundingMode = RoundingMode.HALF_UP): BigDecimal {
@@ -52,6 +53,7 @@ class BigDecimal(val value: Double) : Comparable<BigDecimal> {
         val ONE = BigDecimal(1.0)
         val TEN = BigDecimal(10.0)
         fun valueOf(valLong: Long): BigDecimal = BigDecimal(valLong.toDouble())
+        fun valueOf(valInt: Int): BigDecimal = BigDecimal(valInt.toDouble())
         fun valueOf(valDouble: Double): BigDecimal = BigDecimal(valDouble)
     }
 }

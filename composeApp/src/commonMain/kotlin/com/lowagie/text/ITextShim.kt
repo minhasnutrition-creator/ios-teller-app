@@ -87,11 +87,20 @@ open class Paragraph(val text: String = "", val font: Font = Font()) {
     fun setLeading(lead: Float) { leading = lead }
 }
 
-open class Image {
+open class Image(
+    val rawWidth: Float = 0f,
+    val rawHeight: Float = 0f,
+    val rawComponents: Int = 0,
+    val rawBpc: Int = 0,
+    val rawData: ByteArray? = null
+) {
     companion object {
         fun getInstance(bytes: ByteArray): Image = Image()
         fun getInstance(path: String): Image = Image()
         fun getInstance(url: Any?): Image = Image()
+        // Raw-pixel constructor: components (e.g. 3 = RGB), bpc = bits per component.
+        fun getInstance(width: Int, height: Int, components: Int, bpc: Int, data: ByteArray): Image =
+            Image(width.toFloat(), height.toFloat(), components, bpc, data)
     }
     var alignment: Int = 0
     fun scaleToFit(w: Float, h: Float) {}

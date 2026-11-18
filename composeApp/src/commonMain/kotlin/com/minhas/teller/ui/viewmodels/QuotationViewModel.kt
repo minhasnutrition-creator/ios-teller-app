@@ -113,7 +113,7 @@ class QuotationViewModel(private val repository: QuotationRepository) : ViewMode
 
 class QuotationViewModelFactory(private val repository: QuotationRepository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(QuotationViewModel::class.java)) {
             return QuotationViewModel(repository) as T
         }

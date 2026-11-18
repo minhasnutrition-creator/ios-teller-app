@@ -12,10 +12,15 @@ class DatePickerDialog(
     val datePicker = DatePicker()
 
     fun interface OnDateSetListener {
-        fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int)
+        fun onDateSet(view: DatePicker, year: Int, month: Int, dayOfMonth: Int)
     }
 
+    private var onDismiss: (() -> Unit)? = null
+
     fun setTitle(title: CharSequence) {}
+    fun setOnDismissListener(listener: (() -> Unit)?) {
+        onDismiss = listener
+    }
 
     fun show() {
         listener?.onDateSet(datePicker, year, month, dayOfMonth)

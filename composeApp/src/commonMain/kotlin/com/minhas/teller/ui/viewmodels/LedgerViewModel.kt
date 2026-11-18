@@ -71,7 +71,7 @@ class LedgerViewModel(private val repository: LedgerRepository) : ViewModel() {
 }
 
 class LedgerViewModelFactory(private val repository: LedgerRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(LedgerViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return LedgerViewModel(repository) as T

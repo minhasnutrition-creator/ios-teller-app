@@ -43,6 +43,7 @@ interface Context {
     fun getCacheDir(): File = cacheDir
     val resources: Any? get() = null
     fun findActivity(): Any? = null
+    val packageManager: android.content.pm.PackageManager get() = android.content.pm.PackageManager
 
     companion object {
         const val MODE_PRIVATE = 0
@@ -54,13 +55,19 @@ interface Context {
     }
 }
 
-open class ContextWrapper(val base: Context? = null) : Context
+open class ContextWrapper(val base: Context? = null) : Context {
+    // Real android.content.ContextWrapper names this `baseContext` (platform type, never
+    // null in practice); callers that walk the wrapper chain (e.g. ExportUtils.findActivity)
+    // use that name, so it's exposed as non-null, falling back to `this` at the root.
+    val baseContext: Context get() = base ?: this
+}
 
 
 open class Intent {
     var action: String = ""
     var data: Any? = null
     var type: String? = null
+    var `package`: String? = null
 
     constructor()
     constructor(action: String) { this.action = action }

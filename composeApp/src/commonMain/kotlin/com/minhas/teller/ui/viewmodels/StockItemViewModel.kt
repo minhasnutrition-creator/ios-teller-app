@@ -66,7 +66,7 @@ class StockItemViewModel(private val repository: StockItemRepository) : ViewMode
 }
 
 class StockItemViewModelFactory(private val repository: StockItemRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(StockItemViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return StockItemViewModel(repository) as T

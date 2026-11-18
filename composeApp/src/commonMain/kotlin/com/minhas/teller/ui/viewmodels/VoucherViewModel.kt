@@ -360,7 +360,7 @@ class VoucherViewModelFactory(
     private val auditLogDao: com.minhas.teller.data.dao.AuditLogDao,
     private val db: AppDatabase
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(VoucherViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return VoucherViewModel(

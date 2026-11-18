@@ -317,7 +317,7 @@ class AiAuditorViewModel(
                     projectedCash90d = max(0.0, totalLiquidity - (dailyBurnRate * 90))
                 )
 
-                val deductions = findings.sumOf { finding ->
+                val deductions: Int = findings.sumOf { finding ->
                     when (finding.severity) {
                         Severity.HIGH -> 15
                         Severity.MEDIUM -> 8
@@ -345,7 +345,7 @@ class AiAuditorViewModelFactory(
     private val ledgerRepository: LedgerRepository
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(AiAuditorViewModel::class.java)) {
             return AiAuditorViewModel(voucherRepository, ledgerRepository) as T
         }

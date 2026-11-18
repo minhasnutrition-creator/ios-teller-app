@@ -1718,7 +1718,7 @@ class ImportCleanupViewModel(
 }
 
 class ImportCleanupViewModelFactory(private val db: AppDatabase) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(ImportCleanupViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ImportCleanupViewModel(db) as T

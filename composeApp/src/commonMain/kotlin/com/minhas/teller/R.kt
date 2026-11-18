@@ -27,6 +27,13 @@ object R {
         const val ic_splash_te = 1014
         const val app_bg = 1015
         const val gem_amethyst = 1016
+        const val gem_carnelian = 1017
+        const val gem_malachite = 1018
+        const val gem_lapis = 1019
+        const val gem_jasper = 1020
+        const val gem_tiger_eye = 1021
+        const val gem_rose_quartz = 1022
+        const val gem_jade = 1023
     }
 
     object string {

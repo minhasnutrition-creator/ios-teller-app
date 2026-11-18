@@ -297,7 +297,7 @@ class TellerScoreViewModelFactory(
     private val ledgerRepository: LedgerRepository
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(TellerScoreViewModel::class.java)) {
             return TellerScoreViewModel(voucherRepository, ledgerRepository) as T
         }

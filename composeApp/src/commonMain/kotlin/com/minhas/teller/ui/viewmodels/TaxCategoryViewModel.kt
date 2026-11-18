@@ -71,7 +71,7 @@ class TaxCategoryViewModel(private val repository: TaxCategoryRepository) : View
 }
 
 class TaxCategoryViewModelFactory(private val repository: TaxCategoryRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(TaxCategoryViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return TaxCategoryViewModel(repository) as T

@@ -16,8 +16,13 @@ class DataSnapshot {
     fun hasChildren(): Boolean = false
     fun hasChild(path: String): Boolean = false
     fun child(path: String): DataSnapshot = DataSnapshot()
-    inline fun <reified T : Any> getValue(valueType: Class<T>): T? = null
-    fun <T> getValue(t: Any?): T? = null
+    // `Class<T>` is our `typealias Class<T> = Any` shim, which erases T entirely — a
+    // parameter typed that way gives Kotlin's inference nothing to work with, so T could
+    // only ever be solved via target-type context (e.g. an immediate `?: default`), and
+    // silently failed everywhere else ("Cannot infer type for this parameter"). `KClass<T>`
+    // is what `SomeType::class.java` actually evaluates to under our `.java` shim, so typing
+    // the parameter that way lets every call site infer T from the argument directly.
+    inline fun <reified T : Any> getValue(valueType: kotlin.reflect.KClass<T>): T? = null
 }
 
 class DatabaseReference {
@@ -45,5 +50,7 @@ class FirebaseDatabase private constructor() {
 
 object ServerValue {
     val TIMESTAMP: Map<String, String> = mapOf(".sv" to "timestamp")
+    fun increment(delta: Long): Map<String, Any> = mapOf(".sv" to mapOf("increment" to delta))
+    fun increment(delta: Double): Map<String, Any> = mapOf(".sv" to mapOf("increment" to delta))
 }
 

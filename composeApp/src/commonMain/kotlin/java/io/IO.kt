@@ -47,6 +47,8 @@ open class File {
     fun readText(charset: Any? = null): String = ""
     fun writeText(text: String, charset: Any? = null) {}
     fun copyTo(target: File, overwrite: Boolean = false): File = target
+    fun inputStream(): FileInputStream = FileInputStream(this)
+    fun outputStream(): FileOutputStream = FileOutputStream(this)
     fun copyRecursively(target: File, overwrite: Boolean = false): Boolean = true
     fun deleteRecursively(): Boolean = true
 

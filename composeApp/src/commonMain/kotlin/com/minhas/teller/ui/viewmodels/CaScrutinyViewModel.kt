@@ -706,7 +706,7 @@ class CaScrutinyViewModelFactory(
     private val voucherRepository: VoucherRepository,
     private val ledgerRepository: LedgerRepository
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(CaScrutinyViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return CaScrutinyViewModel(db, voucherRepository, ledgerRepository) as T

@@ -340,7 +340,7 @@ class DashboardAttentionViewModelFactory(
     private val ledgerRepository: LedgerRepository
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(DashboardAttentionViewModel::class.java)) {
             return DashboardAttentionViewModel(voucherRepository, ledgerRepository) as T
         }

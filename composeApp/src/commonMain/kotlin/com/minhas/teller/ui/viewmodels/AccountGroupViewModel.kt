@@ -56,7 +56,7 @@ class AccountGroupViewModel(private val repository: AccountGroupRepository) : Vi
 }
 
 class AccountGroupViewModelFactory(private val repository: AccountGroupRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>): T {
+    override fun <T : ViewModel> create(modelClass: kotlin.reflect.KClass<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
         if (modelClass.isAssignableFrom(AccountGroupViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return AccountGroupViewModel(repository) as T

@@ -65,6 +65,9 @@ class Typeface {
     companion object {
         val DEFAULT = Typeface()
         val DEFAULT_BOLD = Typeface()
+        val SERIF = Typeface()
+        val SANS_SERIF = Typeface()
+        val MONOSPACE = Typeface()
         const val BOLD = 1
         const val NORMAL = 0
         fun create(family: String?, style: Int): Typeface = Typeface()
@@ -76,13 +79,22 @@ class BlurMaskFilter(val radius: Float, val style: Blur) {
     enum class Blur { NORMAL, SOLID, OUTER, INNER }
 }
 
-open class ColorMatrix {
+open class ColorMatrix() {
+    var values: FloatArray = floatArrayOf(
+        1f, 0f, 0f, 0f, 0f,
+        0f, 1f, 0f, 0f, 0f,
+        0f, 0f, 1f, 0f, 0f,
+        0f, 0f, 0f, 1f, 0f
+    )
+    constructor(src: FloatArray) : this() {
+        values = src
+    }
     fun setSaturation(sat: Float) {}
 }
 
 open class ColorMatrixColorFilter(val matrix: Any? = null)
 
-class Paint {
+class Paint() {
     var color: Int = 0
     var alpha: Int = 255
     var strokeWidth: Float = 1f
@@ -96,6 +108,24 @@ class Paint {
     var isFakeBoldText: Boolean = false
     var maskFilter: Any? = null
     var colorFilter: Any? = null
+
+    // Android's Paint(Paint src) copy constructor, used to derive a variant paint
+    // (e.g. a bolder/larger label) from a base paint without re-setting every field.
+    constructor(src: Paint) : this() {
+        color = src.color
+        alpha = src.alpha
+        strokeWidth = src.strokeWidth
+        isAntiAlias = src.isAntiAlias
+        style = src.style
+        strokeCap = src.strokeCap
+        strokeJoin = src.strokeJoin
+        textSize = src.textSize
+        typeface = src.typeface
+        textAlign = src.textAlign
+        isFakeBoldText = src.isFakeBoldText
+        maskFilter = src.maskFilter
+        colorFilter = src.colorFilter
+    }
 
     enum class Style { FILL, STROKE, FILL_AND_STROKE }
     enum class Cap { BUTT, ROUND, SQUARE }
@@ -116,6 +146,7 @@ class Canvas(val bitmap: Bitmap? = null) {
     fun drawText(text: String, x: Float, y: Float, paint: Paint) {}
     fun drawText(text: String, start: Int, end: Int, x: Float, y: Float, paint: Paint) {}
     fun drawRect(rect: RectF, paint: Paint) {}
+    fun drawRect(left: Float, top: Float, right: Float, bottom: Float, paint: Paint) {}
     fun drawRoundRect(rect: RectF, rx: Float, ry: Float, paint: Paint) {}
     fun drawLine(startX: Float, startY: Float, stopX: Float, stopY: Float, paint: Paint) {}
     fun drawCircle(cx: Float, cy: Float, radius: Float, paint: Paint) {}

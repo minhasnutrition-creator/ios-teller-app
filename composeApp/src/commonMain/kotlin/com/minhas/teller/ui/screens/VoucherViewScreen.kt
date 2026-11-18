@@ -151,7 +151,7 @@ fun VoucherViewScreen(navController: NavHostController, voucherId: Int) {
             share = false,
             voucherEntries = vwe.voucherEntries,
             onGenerated = { file ->
-                ThermalPrinterHelper.printDocumentWithSystem(context, file, "${vwe.voucher.type} #${vwe.voucher.voucherNumber}")
+                ThermalPrinterHelper.printDocumentWithSystem(context, "${vwe.voucher.type} #${vwe.voucher.voucherNumber}", file)
             }
         )
     }

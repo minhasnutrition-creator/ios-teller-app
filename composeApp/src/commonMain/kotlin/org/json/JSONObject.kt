@@ -110,6 +110,11 @@ class JSONArray {
     fun optString(index: Int, fallback: String = ""): String = list.getOrNull(index)?.toString() ?: fallback
     fun optDouble(index: Int, fallback: Double = 0.0): Double = list.getOrNull(index)?.toString()?.toDoubleOrNull() ?: fallback
     fun optLong(index: Int, fallback: Long = 0L): Long = list.getOrNull(index)?.toString()?.toLongOrNull() ?: fallback
+    fun getString(index: Int): String = list.getOrNull(index)?.toString() ?: throw JSONException("Index out of range: $index")
+    fun getDouble(index: Int): Double = list.getOrNull(index)?.toString()?.toDoubleOrNull() ?: throw JSONException("Index out of range: $index")
+    fun getInt(index: Int): Int = list.getOrNull(index)?.toString()?.toIntOrNull() ?: throw JSONException("Index out of range: $index")
+    fun getLong(index: Int): Long = list.getOrNull(index)?.toString()?.toLongOrNull() ?: throw JSONException("Index out of range: $index")
+    fun getBoolean(index: Int): Boolean = list.getOrNull(index)?.toString()?.equals("true", ignoreCase = true) ?: throw JSONException("Index out of range: $index")
     fun length(): Int = list.size
     fun isNull(index: Int): Boolean = list.getOrNull(index) == null
 
