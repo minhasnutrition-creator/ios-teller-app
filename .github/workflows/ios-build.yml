@@ -59,6 +59,9 @@ jobs:
       - name: List Available Schemes
         run: xcodebuild -list -project iosApp/iosApp.xcodeproj
 
+      - name: Build Kotlin Multiplatform Framework
+        run: ./gradlew :composeApp:kspKotlinIosSimulatorArm64 --stacktrace --info
+
       - name: Build iOS App
         run: |
           xcodebuild \
