@@ -60,7 +60,7 @@ jobs:
         run: xcodebuild -list -project iosApp/iosApp.xcodeproj
 
       - name: Build Kotlin Multiplatform Framework
-        run: ./gradlew :composeApp:kspKotlinIosSimulatorArm64 --stacktrace --info
+        run: ./gradlew :composeApp:kspCommonMainMetadata :composeApp:kspKotlinIosSimulatorArm64 --stacktrace --info
 
       - name: Build iOS App
         run: |

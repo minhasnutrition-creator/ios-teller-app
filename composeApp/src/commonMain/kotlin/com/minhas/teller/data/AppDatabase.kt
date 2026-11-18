@@ -47,10 +47,8 @@ import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.execSQL
 
 // Room KMP: The compiler generates the actual implementation of this expect object
-@Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
-    override fun initialize(): AppDatabase
-}
+@Suppress("NO_ACTUAL_FOR_EXPECT", "KotlinNoActualForExpect")
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase>
 
 @Database(entities = [Ledger::class, Voucher::class, VoucherEntry::class, StockItem::class, com.minhas.teller.data.entities.Unit::class, InventoryEntry::class, Company::class, AccountGroup::class, BillAllocation::class, AuditLog::class, TaxCategory::class, Godown::class, ChatMessageEntity::class, HsnEntry::class, Quotation::class, HindiMapping::class, ImportJob::class, ImportMapping::class, EvidenceAttachment::class], version = 33)
 @TypeConverters(Converters::class)
