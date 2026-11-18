@@ -52,7 +52,7 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     override fun initialize(): AppDatabase
 }
 
-@Database(entities = [Ledger::class, Voucher::class, VoucherEntry::class, StockItem::class, Unit::class, InventoryEntry::class, Company::class, AccountGroup::class, BillAllocation::class, AuditLog::class, TaxCategory::class, Godown::class, ChatMessageEntity::class, HsnEntry::class, Quotation::class, HindiMapping::class, ImportJob::class, ImportMapping::class, EvidenceAttachment::class], version = AppDatabase.DB_VERSION)
+@Database(entities = [Ledger::class, Voucher::class, VoucherEntry::class, StockItem::class, com.minhas.teller.data.entities.Unit::class, InventoryEntry::class, Company::class, AccountGroup::class, BillAllocation::class, AuditLog::class, TaxCategory::class, Godown::class, ChatMessageEntity::class, HsnEntry::class, Quotation::class, HindiMapping::class, ImportJob::class, ImportMapping::class, EvidenceAttachment::class], version = 33)
 @TypeConverters(Converters::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {

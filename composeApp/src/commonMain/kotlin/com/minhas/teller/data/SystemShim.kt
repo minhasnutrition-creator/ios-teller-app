@@ -1,0 +1,3 @@
+package com.minhas.teller.data
+
+typealias System = java.lang.System
