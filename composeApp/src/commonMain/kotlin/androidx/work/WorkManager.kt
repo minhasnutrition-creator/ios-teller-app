@@ -24,15 +24,39 @@ class WorkInfo {
     val runAttemptCount: Int = 0
 }
 
+enum class NetworkType {
+    NOT_REQUIRED, CONNECTED, UNMETERED, NOT_ROAMING, METERED
+}
+
+enum class BackoffPolicy {
+    LINEAR, EXPONENTIAL
+}
+
+enum class OutOfQuotaPolicy {
+    RUN_AS_NON_EXPEDITED_WORK_REQUEST, DROP_WORK_REQUEST
+}
+
+class Constraints {
+    class Builder {
+        fun setRequiredNetworkType(type: NetworkType): Builder = this
+        fun setRequiresCharging(requires: Boolean): Builder = this
+        fun build(): Constraints = Constraints()
+    }
+}
+
 open class WorkRequest
 class OneTimeWorkRequest : WorkRequest() {
     class Builder(workerClass: Any?) {
+        fun setConstraints(constraints: Constraints): Builder = this
+        fun setBackoffCriteria(policy: BackoffPolicy, backoffDelay: Long, timeUnit: Any?): Builder = this
+        fun setBackoffCriteria(policy: BackoffPolicy, backoffDelay: Int, timeUnit: Any?): Builder = this
         fun build(): OneTimeWorkRequest = OneTimeWorkRequest()
     }
 }
 
 class PeriodicWorkRequest : WorkRequest() {
     class Builder(workerClass: Any?, interval: Long, timeUnit: Any?) {
+        fun setConstraints(constraints: Constraints): Builder = this
         fun build(): PeriodicWorkRequest = PeriodicWorkRequest()
     }
 }

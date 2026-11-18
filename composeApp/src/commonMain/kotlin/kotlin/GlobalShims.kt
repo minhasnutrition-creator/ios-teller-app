@@ -6,13 +6,18 @@ import kotlin.reflect.KClass
 fun String.Companion.format(format: String, vararg args: Any?): String =
     com.minhas.teller.compat.simpleFormat(format, args)
 
-fun String.Companion.format(locale: Any?, format: String, vararg args: Any?): String =
+fun String.Companion.format(locale: java.util.Locale, format: String, vararg args: Any?): String =
     com.minhas.teller.compat.simpleFormat(format, args)
 
 fun String.format(vararg args: Any?): String =
-    com.minhas.teller.compat.simpleFormat(this, args)
+    if (args.isNotEmpty() && args[0] is java.util.Locale) {
+        val rest = args.drop(1).toTypedArray()
+        com.minhas.teller.compat.simpleFormat(this, rest)
+    } else {
+        com.minhas.teller.compat.simpleFormat(this, args)
+    }
 
-fun String.format(locale: Any?, vararg args: Any?): String =
+fun String.format(locale: java.util.Locale, vararg args: Any?): String =
     com.minhas.teller.compat.simpleFormat(this, args)
 
 fun String.lowercase(locale: Any?): String = this.lowercase()
@@ -32,17 +37,42 @@ val Throwable.localizedMessage: String?
 inline fun <R> synchronized(lock: Any, block: () -> R): R = block()
 
 // 5. Reflection & ViewModel Factory Class<T> support
-typealias Class<T> = KClass<T>
+typealias Class<T : Any> = KClass<T>
 
 val <T : Any> KClass<T>.java: KClass<T>
     get() = this
+
+val <T : Any> T.javaClass: KClass<out T>
+    get() = this::class
 
 fun KClass<*>.isAssignableFrom(other: Any?): Boolean = true
 
 val KClass<*>.name: String
     get() = qualifiedName ?: simpleName ?: ""
 
-// 6. Volatile annotation
+// 6. Charsets & StringBuffer
+typealias Charsets = kotlin.text.Charsets
+typealias StringBuffer = StringBuilder
+
+// 7. Compose & Graphics extensions
+fun androidx.compose.ui.graphics.NativeCanvas.drawText(text: String, x: Float, y: Float, paint: Any? = null) {}
+
+fun android.graphics.Bitmap.asImageBitmap(): androidx.compose.ui.graphics.ImageBitmap =
+    androidx.compose.ui.graphics.ImageBitmap(width.coerceAtLeast(1), height.coerceAtLeast(1))
+
+// 8. JVM Annotations made available in root package
 @Target(AnnotationTarget.FIELD, AnnotationTarget.PROPERTY)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Volatile
+
+@Target(AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.SOURCE)
+annotation class JvmField
+
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@Retention(AnnotationRetention.SOURCE)
+annotation class JvmStatic
+
+@Target(AnnotationTarget.CONSTRUCTOR, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class JvmOverloads

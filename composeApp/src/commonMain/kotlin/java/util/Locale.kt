@@ -1,7 +1,10 @@
 package java.util
 
 class Locale(val language: String, val country: String = "", val variant: String = "") {
-    val displayName: String get() = "$language-$country"
+    val displayName: String get() = if (country.isEmpty()) language else "$language-$country"
+    val displayCountry: String get() = country.ifEmpty { displayName }
+
+    fun toLanguageTag(): String = if (country.isEmpty()) language else "$language-$country"
 
     override fun toString(): String = if (country.isEmpty()) language else "${language}_$country"
 
@@ -12,6 +15,14 @@ class Locale(val language: String, val country: String = "", val variant: String
     }
 
     override fun hashCode(): Int = language.hashCode() * 31 + country.hashCode()
+
+    class Builder {
+        private var lang = "en"
+        private var region = ""
+        fun setLanguage(language: String): Builder { lang = language; return this }
+        fun setRegion(region: String): Builder { this.region = region; return this }
+        fun build(): Locale = Locale(lang, region)
+    }
 
     companion object {
         val ROOT = Locale("", "")
@@ -29,5 +40,14 @@ class Locale(val language: String, val country: String = "", val variant: String
         fun setDefault(locale: Locale) {
             defaultLocale = locale
         }
+
+        fun forLanguageTag(tag: String): Locale {
+            val parts = tag.split("-", "_")
+            return Locale(parts.getOrElse(0) { "en" }, parts.getOrElse(1) { "" })
+        }
+
+        fun getISOCountries(): Array<String> = arrayOf(
+            "US", "IN", "GB", "CA", "AU", "DE", "FR", "JP", "CN", "BR", "ZA", "AE", "SA", "SG"
+        )
     }
 }

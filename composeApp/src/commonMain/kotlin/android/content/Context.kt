@@ -54,6 +54,9 @@ interface Context {
     }
 }
 
+open class ContextWrapper(val base: Context? = null) : Context
+
+
 open class Intent {
     var action: String = ""
     var data: Any? = null

@@ -10,6 +10,9 @@ interface ManagedActivityResultLauncher<I, O> {
 }
 
 @Composable
+fun BackHandler(enabled: Boolean = true, onBack: () -> Unit = {}) {}
+
+@Composable
 fun <I, O> rememberLauncherForActivityResult(
     contract: ActivityResultContract<I, O>,
     onResult: (O) -> Unit

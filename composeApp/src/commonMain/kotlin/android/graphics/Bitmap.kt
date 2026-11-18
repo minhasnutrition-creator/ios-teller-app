@@ -34,6 +34,7 @@ open class Bitmap {
             b.height = height
             return b
         }
+        fun createScaledBitmap(src: Bitmap, dstWidth: Int, dstHeight: Int, filter: Boolean): Bitmap = src
     }
 }
 

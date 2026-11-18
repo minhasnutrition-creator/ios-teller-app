@@ -25,6 +25,8 @@ object R {
         const val ic_rpt_safe_box = 1012
         const val ic_rpt_transaction = 1013
         const val ic_splash_te = 1014
+        const val app_bg = 1015
+        const val gem_amethyst = 1016
     }
 
     object string {

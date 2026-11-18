@@ -17,6 +17,7 @@ open class RGBColor(
 open class PdfPCell(val phrase: Phrase = Phrase()) {
     constructor(paragraph: Paragraph) : this(Phrase(paragraph.text, paragraph.font))
     constructor(image: Image) : this()
+    constructor(table: PdfPTable) : this()
 
     var border: Int = Rectangle.BOX
     var borderWidth: Float = 1f
@@ -63,12 +64,14 @@ open class PdfPTable(val numColumns: Int) {
     var spacingBefore: Float = 0f
     var spacingAfter: Float = 0f
     var horizontalAlignment: Int = Element.ALIGN_CENTER
+    var headerRows: Int = 0
     val defaultCell: PdfPCell = PdfPCell()
 
     fun setSpacingBefore(s: Float) { spacingBefore = s }
     fun setSpacingAfter(s: Float) { spacingAfter = s }
     fun setWidthPercentage(w: Float) { widthPercentage = w }
     fun setHorizontalAlignment(a: Int) { horizontalAlignment = a }
+    fun setHeaderRows(rows: Int) { headerRows = rows }
 
     fun setWidths(widths: FloatArray) {}
     fun setWidths(widths: IntArray) {}
@@ -84,6 +87,11 @@ open class PdfContentByte {
     fun restoreState() {}
     fun setRGBColorFill(r: Int, g: Int, b: Int) {}
     fun setRGBColorStroke(r: Int, g: Int, b: Int) {}
+    fun setColorFill(color: Any?) {}
+    fun setColorStroke(color: Any?) {}
+    fun moveTo(x: Float, y: Float) {}
+    fun lineTo(x: Float, y: Float) {}
+    fun closePath() {}
     fun rectangle(x: Float, y: Float, w: Float, h: Float) {}
     fun fill() {}
     fun stroke() {}

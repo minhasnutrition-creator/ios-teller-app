@@ -41,6 +41,9 @@ open class Font(
         const val ITALIC = 2
         const val UNDERLINE = 4
         const val BOLDITALIC = 3
+        const val HELVETICA = "Helvetica"
+        const val TIMES_ROMAN = "Times-Roman"
+        const val COURIER = "Courier"
     }
 }
 
@@ -93,6 +96,7 @@ open class Image {
     var alignment: Int = 0
     fun scaleToFit(w: Float, h: Float) {}
     fun scalePercent(percent: Float) {}
+    fun scaleAbsolute(w: Float, h: Float) {}
     fun setAbsolutePosition(x: Float, y: Float) {}
 }
 

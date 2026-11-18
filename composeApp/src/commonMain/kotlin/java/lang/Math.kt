@@ -22,6 +22,8 @@ object Math {
     fun sqrt(a: Double): Double = kotlin.math.sqrt(a)
     fun pow(a: Double, b: Double): Double = a.pow(b)
     fun random(): Double = kotlin.random.Random.nextDouble()
+    fun toRadians(angdeg: Double): Double = angdeg / 180.0 * kotlin.math.PI
+    fun toDegrees(angrad: Double): Double = angrad * 180.0 / kotlin.math.PI
     const val PI: Double = kotlin.math.PI
     const val E: Double = kotlin.math.E
 }

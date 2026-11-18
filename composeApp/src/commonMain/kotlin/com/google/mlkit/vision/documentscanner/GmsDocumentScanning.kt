@@ -16,20 +16,18 @@ class GmsDocumentScanningResult(val pages: List<Page> = emptyList()) {
     }
 }
 
-class GmsDocumentScannerOptions {
+object GmsDocumentScannerOptions {
+    const val RESULT_FORMAT_JPEG = 101
+    const val RESULT_FORMAT_PDF = 102
+    const val SCANNER_MODE_FULL = 1
+    const val SCANNER_MODE_BASE = 2
+
     class Builder {
         fun setGalleryImportAllowed(allowed: Boolean): Builder = this
         fun setResultFormats(format: Int, vararg formats: Int): Builder = this
         fun setScannerMode(mode: Int): Builder = this
         fun setPageLimit(limit: Int): Builder = this
-        fun build(): GmsDocumentScannerOptions = GmsDocumentScannerOptions()
-    }
-
-    companion object {
-        const val RESULT_FORMAT_JPEG = 101
-        const val RESULT_FORMAT_PDF = 102
-        const val SCANNER_MODE_FULL = 1
-        const val SCANNER_MODE_BASE = 2
+        fun build(): GmsDocumentScannerOptions = GmsDocumentScannerOptions
     }
 }
 

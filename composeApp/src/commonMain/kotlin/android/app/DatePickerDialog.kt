@@ -13,6 +13,8 @@ class DatePickerDialog(
         fun onDateSet(view: Any?, year: Int, month: Int, dayOfMonth: Int)
     }
 
+    fun setTitle(title: CharSequence) {}
+
     fun show() {
         // Multiplatform date picker dialog
         listener?.invoke(null, year, month, dayOfMonth)

@@ -26,6 +26,26 @@ class Matcher(private val regex: Regex, private val input: String) {
     private var matchResult: MatchResult? = null
     private var matchResults: List<MatchResult>? = null
     private var currentIndex = 0
+    private var lastAppendPosition = 0
+
+    fun appendReplacement(sb: StringBuilder, replacement: String): Matcher {
+        val mr = matchResult ?: return this
+        val prevEnd = lastAppendPosition
+        val start = mr.range.first
+        if (start > prevEnd) {
+            sb.append(input.substring(prevEnd, start))
+        }
+        sb.append(replacement)
+        lastAppendPosition = mr.range.last + 1
+        return this
+    }
+
+    fun appendTail(sb: StringBuilder): StringBuilder {
+        if (lastAppendPosition < input.length) {
+            sb.append(input.substring(lastAppendPosition))
+        }
+        return sb
+    }
 
     fun find(): Boolean {
         if (matchResults == null) {

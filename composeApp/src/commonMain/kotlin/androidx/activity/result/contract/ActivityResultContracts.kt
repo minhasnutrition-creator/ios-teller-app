@@ -11,8 +11,8 @@ object ActivityResultContracts {
     class TakePicture : ActivityResultContract<Uri, Boolean>()
     class GetContent : ActivityResultContract<String, Uri?>()
     class OpenDocument : ActivityResultContract<Array<String>, Uri?>()
-    class StartActivityForResult : ActivityResultContract<Intent, Any?>()
-    class StartIntentSenderForResult : ActivityResultContract<Any?, Any?>()
+    class StartActivityForResult : ActivityResultContract<Intent, androidx.activity.result.ActivityResult>()
+    class StartIntentSenderForResult : ActivityResultContract<Any?, androidx.activity.result.ActivityResult>()
     class PickVisualMedia : ActivityResultContract<Any?, Uri?>() {
         companion object {
             val ImageOnly = Any()
