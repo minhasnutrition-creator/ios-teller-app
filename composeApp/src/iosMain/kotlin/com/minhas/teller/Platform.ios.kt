@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+
 package com.minhas.teller
 
 import com.minhas.teller.data.AppDatabase
@@ -36,10 +38,7 @@ actual object PlatformUtils {
             )
             rootViewController.presentViewController(alert, animated = true) {
                 // Auto dismiss after 1.5 seconds
-                dispatch_after(
-                    dispatch_time(DISPATCH_TIME_NOW, (1.5 * NSEC_PER_SEC.toDouble()).toLong()),
-                    dispatch_get_main_queue()
-                ) {
+                NSTimer.scheduledTimerWithTimeInterval(1.5, repeats = false) {
                     alert.dismissViewControllerAnimated(true, completion = null)
                 }
             }
