@@ -17,7 +17,6 @@ import com.minhas.teller.data.entities.Ledger
 import com.minhas.teller.data.entities.Voucher
 import com.minhas.teller.data.entities.VoucherEntry
 import com.minhas.teller.data.entities.StockItem
-import com.minhas.teller.data.entities.Unit
 import com.minhas.teller.data.entities.InventoryEntry
 import com.minhas.teller.data.entities.Company
 
@@ -41,6 +40,9 @@ import com.minhas.teller.data.dao.ImportJobDao
 import com.minhas.teller.data.dao.ImportMappingDao
 import com.minhas.teller.data.dao.EvidenceAttachmentDao
 import com.minhas.teller.data.dao.ChatMessageDao
+import com.minhas.teller.data.dao.HsnDao
+import com.minhas.teller.data.dao.QuotationDao
+import com.minhas.teller.data.dao.HindiMappingDao
 
 import androidx.room.migration.Migration
 import androidx.sqlite.SQLiteConnection
@@ -65,15 +67,14 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun accountGroupDao(): AccountGroupDao
     abstract fun billAllocationDao(): BillAllocationDao
     abstract fun auditLogDao(): AuditLogDao
-    abstract fun hsnDao(): com.minhas.teller.data.dao.HsnDao
-    abstract fun quotationDao(): com.minhas.teller.data.dao.QuotationDao
-    abstract fun hindiMappingDao(): com.minhas.teller.data.dao.HindiMappingDao
+    abstract fun hsnDao(): HsnDao
+    abstract fun quotationDao(): QuotationDao
+    abstract fun hindiMappingDao(): HindiMappingDao
     abstract fun importJobDao(): ImportJobDao
     abstract fun importMappingDao(): ImportMappingDao
     abstract fun evidenceAttachmentDao(): EvidenceAttachmentDao
 
     companion object {
-        @Volatile
         private var INSTANCE: AppDatabase? = null
 
         val MIGRATION_7_8 = object : Migration(7, 8) {
@@ -418,7 +419,7 @@ abstract class AppDatabase : RoomDatabase() {
         }
 
         fun getDatabase(context: Any? = null): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
+            return INSTANCE ?: run {
                 val instance = com.minhas.teller.getAppDatabase()
                 INSTANCE = instance
                 instance
