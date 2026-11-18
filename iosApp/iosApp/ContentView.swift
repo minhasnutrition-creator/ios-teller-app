@@ -3,6 +3,9 @@ import UIKit
 import composeApp
 
 struct ComposeView: UIViewControllerRepresentable {
+    typealias UIViewControllerType = UIViewController
+    typealias Coordinator = Void
+
     func makeUIViewController(context: Context) -> UIViewController {
         MainViewControllerKt.MainViewController()
     }
