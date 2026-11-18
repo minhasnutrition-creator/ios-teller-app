@@ -400,7 +400,7 @@ object EInvoiceStore {
         for (name in names) {
             val k = o.keys().asSequence().firstOrNull { it.equals(name, true) } ?: continue
             val v = o.opt(k)
-            if (v != null && v != JSONObject.NULL && v.toString().isNotBlank()) return v.toString()
+            if (v != null && v != JSONObject.JSON_NULL && v.toString().isNotBlank()) return v.toString()
         }
         return null
     }

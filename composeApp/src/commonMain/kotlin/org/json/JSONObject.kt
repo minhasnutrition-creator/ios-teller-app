@@ -51,7 +51,7 @@ class JSONObject {
     fun getLong(key: String): Long = map[key]?.toString()?.toLongOrNull() ?: throw JSONException("No value for $key")
     fun getDouble(key: String): Double = map[key]?.toString()?.toDoubleOrNull() ?: throw JSONException("No value for $key")
     fun getBoolean(key: String): Boolean = map[key]?.toString()?.equals("true", ignoreCase = true) ?: throw JSONException("No value for $key")
-    fun isNull(key: String): Boolean = map[key] == null || map[key] === NULL
+    fun isNull(key: String): Boolean = map[key] == null || map[key] === JSON_NULL
 
     fun toString(indentSpaces: Int): String = toString()
 
@@ -63,7 +63,7 @@ class JSONObject {
             first = false
             sb.append("\"$k\":")
             when (v) {
-                null, NULL -> sb.append("null")
+                null, JSON_NULL -> sb.append("null")
                 is String -> sb.append("\"${v.replace("\"", "\\\"")}\"")
                 is JSONObject -> sb.append(v.toString())
                 is JSONArray -> sb.append(v.toString())
@@ -75,7 +75,11 @@ class JSONObject {
     }
 
     companion object {
-        val NULL: Any = object : Any() {
+        // Named JSON_NULL, not NULL: the generated Obj-C header exports this as a verbatim
+        // @property, and C's own `#define NULL ((void*)0)` macro then mangles the property
+        // declaration itself, breaking the header's own parse (same class of bug as
+        // BuildConfig.DEBUG above).
+        val JSON_NULL: Any = object : Any() {
             override fun toString() = "null"
         }
     }

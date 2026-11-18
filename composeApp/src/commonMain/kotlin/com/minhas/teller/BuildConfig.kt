@@ -4,7 +4,10 @@ package com.minhas.teller
  * Multiplatform build configuration for Teller iOS.
  */
 object BuildConfig {
-    const val DEBUG = true
+    // Named IS_DEBUG, not DEBUG: Kotlin/Native exports every public const as an Obj-C
+    // @property verbatim, and Xcode's Debug configuration #defines a `DEBUG` macro, so a
+    // property literally named DEBUG makes the generated header fail to parse itself.
+    const val IS_DEBUG = true
     const val APPLICATION_ID = "com.minhas.teller"
     const val BUILD_TYPE = "debug"
     const val VERSION_CODE = 657
