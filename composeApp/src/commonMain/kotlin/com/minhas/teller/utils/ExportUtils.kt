@@ -2260,7 +2260,7 @@ object ExportUtils {
             putExtra(Intent.EXTRA_STREAM, uri)
             putExtra(Intent.EXTRA_TEXT, "Invoice from ${company?.name ?: "us"} — Sent via Teller\n$link")
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            `package` = "com.whatsapp"
+            setPackage("com.whatsapp")
         }
         try {
             context.startActivity(intent)

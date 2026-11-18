@@ -66,7 +66,6 @@ open class Intent {
     var action: String = ""
     var data: Any? = null
     var type: String? = null
-    var `package`: String? = null
 
     constructor()
     constructor(action: String) { this.action = action }
