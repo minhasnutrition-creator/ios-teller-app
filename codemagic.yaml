@@ -40,3 +40,5 @@ workflows:
       branch_patterns:
         - pattern: main
           include: true
+artifacts:
+  - /Users/builder/Library/Developer/Xcode/DerivedData/**/Build/Products/Debug-iphonesimulator/*.app
