@@ -5,6 +5,14 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       xcode: 16.2
+    cache:
+      cache_paths:
+        - $HOME/.gradle/caches
+        - $HOME/.gradle/wrapper
+        - $HOME/.konan
+        - $HOME/Library/Caches/Homebrew
+        - /opt/homebrew/Cellar/openjdk@21
+        - /opt/homebrew/opt/openjdk@21
     scripts:
       - name: Install JDK 21
         script: |
