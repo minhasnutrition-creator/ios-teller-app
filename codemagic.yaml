@@ -1,0 +1,34 @@
+workflows:
+  ios-build:
+    name: iOS Build
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: 16.2
+    scripts:
+      - name: Install JDK 21
+        script: |
+          brew install openjdk@21
+          echo "JAVA_HOME=$(brew --prefix openjdk@21)" >> $CM_ENV
+      - name: Make gradlew executable
+        script: chmod +x gradlew
+      - name: Build Kotlin Multiplatform Framework
+        script: ./gradlew :composeApp:kspKotlinIosSimulatorArm64 --stacktrace --info
+      - name: Build iOS App
+        script: |
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            ENABLE_USER_SCRIPT_SANDBOXING=NO \
+            build
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
